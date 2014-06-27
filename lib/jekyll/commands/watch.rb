@@ -1,7 +1,6 @@
 module Jekyll
   module Commands
     class Watch < Command
-
       class << self
 
         def init_with_program(prog)
@@ -43,7 +42,7 @@ module Jekyll
           end
           listener.start
 
-          Jekyll.logger.info "Auto-regeneration:", "enabled for '#{source}'"
+          Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options['source']}'"
 
           unless options['serving']
             trap("INT") do
@@ -56,8 +55,7 @@ module Jekyll
           end
         end
 
-      end # end of class << self
-
+      end
     end
   end
 end
