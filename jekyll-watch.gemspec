@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "jekyll-watch"
-  spec.version       = "1.0.0.rc2"
+  spec.version       = "1.0.0"
   spec.authors       = ["Parker Moore"]
   spec.email         = ["parkrmoore@gmail.com"]
   spec.summary       = %q{Rebuild your Jekyll site when a file changes with the `--watch` switch.}
