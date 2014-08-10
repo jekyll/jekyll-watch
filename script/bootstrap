@@ -1,3 +1,8 @@
 #! /bin/bash
 
-bundle install
+if [[ "$TRAVIS" == "true" ]]; then
+  echo "We're on Travis! Installing to vendor."
+  bundle install --path vendor
+else
+  bundle install --system
+fi

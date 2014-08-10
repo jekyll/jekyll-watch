@@ -1,4 +1,8 @@
 #!/bin/bash
 
-wget https://github.com/jekyll/jekyll/releases/download/v2.2.0/jekyll-2-2-0.tar.gz
-tar -xzvf jekyll-2-2-0.tar.gz
+RELEASES_URL="https://github.com/jekyll/jekyll/releases"
+JEKYLL_VERSION="2.2.0"
+JEKYLL_BUNDLE="jekyll-${JEKYLL_VERSION}.tar.gz"
+
+wget "${RELEASES_URL}/download/v${JEKYLL_VERSION}/${JEKYLL_BUNDLE}"
+tar -xzvf ${JEKYLL_BUNDLE}

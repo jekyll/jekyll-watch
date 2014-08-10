@@ -3,8 +3,6 @@ module Jekyll
     extend self
 
     def watch(options)
-      require 'listen'
-
       listener = build_listener(options)
       listener.start
 
@@ -24,6 +22,7 @@ module Jekyll
     end
 
     def build_listener(options)
+      require 'listen'
       Listen.to(
         options['source'],
         :ignore => listen_ignore_paths(options),
@@ -57,7 +56,7 @@ module Jekyll
     def listen_ignore_paths(options)
       source       = options['source']
       destination  = options['destination']
-      config_files = Configuration[options].config_files(options)
+      config_files = Jekyll.sanitized_path(source, "_config.yml")
       paths = (
         Array(config_files) \
         + Array(destination) \

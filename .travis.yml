@@ -3,7 +3,9 @@ rvm:
 - 1.9.3
 - 2.0
 - 2.1
-install: travis_retry script/bootstrap
+install:
+- travis_retry script/unbundle
+- travis_retry script/bootstrap
 script: script/cibuild
 notifications:
   irc:
