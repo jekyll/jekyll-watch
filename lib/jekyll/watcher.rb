@@ -39,9 +39,6 @@ module Jekyll
         n = c.length
         print Jekyll.logger.message("Regenerating:", "#{n} files at #{t} ")
         begin
-          if config_file_changed?(c, options)
-            options = Jekyll::Configuration[base_options(options)]
-          end
           Jekyll::Command.process_site(Jekyll::Site.new(options))
           puts  "...done."
         rescue => e
@@ -52,37 +49,18 @@ module Jekyll
       }
     end
 
-    def base_options(options)
-      opts = {
-        'source' => options['source'],
-        'destination' => options['destination']
-      }
-      if options.fetch('config', nil)
-        opts['config'] = options['config']
-      end
-      opts
-    end
-
-    def config_file_changed?(changed_files, options)
-      config_files = options.fetch('config', %w{_config.yml}).map do |c|
-        Jekyll.sanitized_path(options['source'], c)
-      end
-      p changed_files
-      p config_files
-
-      !!(config_files & changed_files)
-    end
-
     # Paths to ignore for the watch option
     #
     # options - A Hash of options passed to the command
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source      = options['source']
-      destination = options['destination']
+      source       = options['source']
+      destination  = options['destination']
+      config_files = Configuration[options].config_files(options)
       paths = (
-        Array(destination) \
+        Array(config_files) \
+        + Array(destination) \
         + Array(options['exclude']).map { |e| Jekyll.sanitized_path(source, e) }
       )
       ignored = []
