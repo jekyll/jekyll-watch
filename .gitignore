@@ -20,3 +20,6 @@ tmp
 *.o
 *.a
 mkmf.log
+
+.sass-cache
+_site
