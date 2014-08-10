@@ -60,9 +60,12 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  def test_dir(*files)
+    File.join(TEST_DIR, *files)
+  end
 
   def source_dir(*files)
-    File.join(TEST_DIR, 'test-site', *files)
+    test_dir('test-site', *files)
   end
 
   def dest_dir(*files)

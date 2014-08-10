@@ -50,5 +50,41 @@ describe(Jekyll::Watcher) do
         expect(ignored).to include(/LICENSE/)
       end
     end
+
+    context "when source is absolute" do
+      context "when destination is absolute" do
+        let(:options) { base_opts.merge('destination' => source_dir('_dest')) }
+        it "ignores the destination" do
+          expect(ignored).to eql([/_config\.yml/, /_dest/])
+        end
+      end
+
+      context "when destination is relative" do
+        let(:options) { base_opts.merge('destination' => 'spec/test-site/_dest') }
+        it "ignores the destination" do
+          expect(ignored).to eql([/_config\.yml/, /_dest/])
+        end
+      end
+    end
+
+    context "when source is relative" do
+      let(:base_opts) { {'source' => Pathname.new(source_dir).relative_path_from(Pathname.new('.').expand_path).to_s } }
+
+      context "when destination is absolute" do
+        let(:options) { base_opts.merge('destination' => source_dir('_dest')) }
+        it "ignores the destination" do
+          expect(ignored).to eql([/_config\.yml/, /_dest/])
+        end
+      end
+
+      context "when destination is relative" do
+        let(:options) { base_opts.merge('destination' => 'spec/test-site/_dest') }
+        it "ignores the destination" do
+          expect(ignored).to eql([/_config\.yml/, /_dest/])
+        end
+      end
+    end
+
   end
+
 end
