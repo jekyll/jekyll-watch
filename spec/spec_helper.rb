@@ -1,3 +1,7 @@
+require 'jekyll'
+require File.expand_path('../../lib/jekyll-watch.rb', __FILE__)
+TEST_DIR = File.expand_path('..', __FILE__)
+
 RSpec.configure do |config|
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
@@ -54,5 +58,14 @@ RSpec.configure do |config|
     # Prevents you from mocking or stubbing a method that does not exist on
     # a real object. This is generally recommended.
     mocks.verify_partial_doubles = true
+  end
+
+
+  def source_dir(*files)
+    File.join(TEST_DIR, 'test-site', *files)
+  end
+
+  def dest_dir(*files)
+    source_dir('_site', *files)
   end
 end
