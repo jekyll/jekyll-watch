@@ -1,0 +1,4 @@
+#!/bin/bash
+
+wget https://github.com/jekyll/jekyll/releases/download/v2.2.0/jekyll-2-2-0.tar.gz
+tar -xzvf jekyll-2-2-0.tar.gz

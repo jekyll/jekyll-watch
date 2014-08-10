@@ -1,5 +1,3 @@
 #!/bin/bash
 
-local-jekyll serve --watch \
-  --source spec/test-site \
-  --destination spec/test-site/_site
+bundle exec rspec "$@"
