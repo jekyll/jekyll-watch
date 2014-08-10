@@ -2,6 +2,8 @@
 
 Rebuild your Jekyll site when a file changes with the `--watch` switch.
 
+[![Build Status](https://travis-ci.org/jekyll/jekyll-watch.svg?branch=master)](https://travis-ci.org/jekyll/jekyll-watch)
+
 ## Installation
 
 **`jekyll-watch` comes pre-installed with Jekyll 2.1 or greater.**
