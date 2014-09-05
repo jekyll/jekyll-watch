@@ -1,3 +1,7 @@
+## 1.1.1 / 2014-09-05
+
+  * Exclude test files from the gem build (#9)
+
 ## 1.1.0 / 2014-08-10
 
 ### Minor Enhancements
