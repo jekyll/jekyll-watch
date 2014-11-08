@@ -1,3 +1,7 @@
+## HEAD
+
+  * Only ignore a file or directory if it exists (#13)
+
 ## 1.1.1 / 2014-09-05
 
   * Exclude test files from the gem build (#9)
