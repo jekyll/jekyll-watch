@@ -9,6 +9,12 @@ describe(Jekyll::Watcher) do
   end
   let(:options) { base_opts }
   subject { described_class }
+  before(:each) do
+    FileUtils.mkdir(options['destination']) if options['destination']
+  end
+  after(:each) do
+    FileUtils.rm_rf(options['destination']) if options['destination']
+  end
 
   context "#build_listener" do
     let(:listener) { subject.build_listener(options) }
@@ -43,7 +49,11 @@ describe(Jekyll::Watcher) do
     end
 
     context "with something excluded" do
-      let(:options) { base_opts.merge('exclude' => ['README.md', 'LICENSE']) }
+      let(:excluded) { ['README.md', 'LICENSE'] }
+      let(:excluded_absolute) { excluded.map { |p| Jekyll.sanitized_path(options['source'], p) }}
+      let(:options) { base_opts.merge('exclude' => excluded) }
+      before(:each) { FileUtils.touch(excluded_absolute) }
+      after(:each)  { FileUtils.rm(excluded_absolute) }
 
       it "ignores the excluded files" do
         expect(ignored).to include(/README\.md/)
