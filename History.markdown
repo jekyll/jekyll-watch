@@ -1,4 +1,4 @@
-## HEAD
+## 1.1.2 / 2014-11-08
 
   * Only ignore a file or directory if it exists (#13)
 
