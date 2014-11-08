@@ -48,35 +48,42 @@ module Jekyll
       }
     end
 
+    def custom_excludes(options)
+      Array(options['exclude']).map { |e| Jekyll.sanitized_path(options['source'], e) }
+    end
+
+    def to_exclude(options)
+      config_files = Jekyll.sanitized_path(options['source'], "_config.yml")
+      Array(config_files) \
+        + Array(options['destination']) \
+        + custom_excludes(options)
+    end
+
     # Paths to ignore for the watch option
     #
     # options - A Hash of options passed to the command
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source       = options['source']
+      source       = Pathname.new(options['source']).expand_path
       destination  = options['destination']
-      config_files = Jekyll.sanitized_path(source, "_config.yml")
-      paths = (
-        Array(config_files) \
-        + Array(destination) \
-        + Array(options['exclude']).map { |e| Jekyll.sanitized_path(source, e) }
-      )
-      ignored = []
+      paths        = to_exclude(options)
 
-      source_abs = Pathname.new(source).expand_path
-      paths.each do |p|
-        path_abs = Pathname.new(p).expand_path
-        begin
-          rel_path = path_abs.relative_path_from(source_abs).to_s
-          ignored << Regexp.new(Regexp.escape(rel_path)) unless rel_path.start_with?('../')
-        rescue ArgumentError
-          # Could not find a relative path
+      paths.map do |p|
+        absolute_path = Pathname.new(p).expand_path
+        if absolute_path.exist?
+          begin
+            relative_path = absolute_path.relative_path_from(source).to_s
+            unless relative_path.start_with?('../')
+              path_to_ignore = Regexp.new(Regexp.escape(relative_path))
+              Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
+              path_to_ignore
+            end
+          rescue ArgumentError
+            # Could not find a relative path
+          end
         end
-      end
-
-      Jekyll.logger.debug "Watcher:", "Ignoring #{ignored.map(&:inspect).join(', ')}"
-      ignored
+      end.compact
     end
 
   end
