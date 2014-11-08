@@ -26,7 +26,7 @@ Pass the `--watch` flag to `jekyll build` or `jekyll serve`:
 
 ```bash
 $ jekyll build --watch
-$ jekyll serve --watch
+$ jekyll serve --watch # this flag is the default, so no need to specify it here for the 'serve' command
 ```
 
 The `--watch` flag can be used in combination with any other flags for those
