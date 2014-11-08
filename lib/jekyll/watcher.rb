@@ -53,10 +53,12 @@ module Jekyll
     end
 
     def to_exclude(options)
-      config_files = Jekyll.sanitized_path(options['source'], "_config.yml")
-      Array(config_files) \
-        + Array(options['destination']) \
-        + custom_excludes(options)
+      config_files = [
+        "_config.yml",
+        "_config.yaml",
+        "_config.toml"
+      ].map { |config_file| Jekyll.sanitized_path(options['source'], config_file) }
+      [config_files, options['destination'], custom_excludes(options)].flatten
     end
 
     # Paths to ignore for the watch option
@@ -66,7 +68,6 @@ module Jekyll
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
       source       = Pathname.new(options['source']).expand_path
-      destination  = options['destination']
       paths        = to_exclude(options)
 
       paths.map do |p|
