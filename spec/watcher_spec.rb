@@ -8,6 +8,7 @@ describe(Jekyll::Watcher) do
     }
   end
   let(:options) { base_opts }
+  let(:default_ignored) { [/_config\.yml/, /\.jekyll\-metadata/, /_site/] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options['destination']) if options['destination']
@@ -43,9 +44,13 @@ describe(Jekyll::Watcher) do
 
   context "#listen_ignore_paths" do
     let(:ignored) { subject.listen_ignore_paths(options) }
+    let(:metadata_path) { Jekyll.sanitized_path(options['source'], '.jekyll-metadata') }
 
-    it "ignores config.yml and _site by default" do
-      expect(ignored).to eql([/_config\.yml/, /_site/])
+    before(:each) { FileUtils.touch(metadata_path) }
+    after(:each)  { FileUtils.rm(metadata_path) }
+
+    it "ignores config.yml, .jekyll-metadata, and _site by default" do
+      expect(ignored).to eql(default_ignored)
     end
 
     context "with something excluded" do
@@ -65,14 +70,14 @@ describe(Jekyll::Watcher) do
       context "when destination is absolute" do
         let(:options) { base_opts.merge('destination' => source_dir('_dest')) }
         it "ignores the destination" do
-          expect(ignored).to eql([/_config\.yml/, /_dest/])
+          expect(ignored).to eql([/_config\.yml/, /\.jekyll\-metadata/, /_dest/])
         end
       end
 
       context "when destination is relative" do
         let(:options) { base_opts.merge('destination' => 'spec/test-site/_dest') }
         it "ignores the destination" do
-          expect(ignored).to eql([/_config\.yml/, /_dest/])
+          expect(ignored).to eql([/_config\.yml/, /\.jekyll\-metadata/, /_dest/])
         end
       end
     end
@@ -83,14 +88,14 @@ describe(Jekyll::Watcher) do
       context "when destination is absolute" do
         let(:options) { base_opts.merge('destination' => source_dir('_dest')) }
         it "ignores the destination" do
-          expect(ignored).to eql([/_config\.yml/, /_dest/])
+          expect(ignored).to eql([/_config\.yml/, /\.jekyll\-metadata/, /_dest/])
         end
       end
 
       context "when destination is relative" do
         let(:options) { base_opts.merge('destination' => 'spec/test-site/_dest') }
         it "ignores the destination" do
-          expect(ignored).to eql([/_config\.yml/, /_dest/])
+          expect(ignored).to eql([/_config\.yml/, /\.jekyll\-metadata/, /_dest/])
         end
       end
     end
