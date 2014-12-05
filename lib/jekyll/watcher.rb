@@ -53,21 +53,14 @@ module Jekyll
     end
 
     def config_files(options)
-      %w[
-        _config.yml
-        _config.yaml
-        _config.toml
-      ].map { |config_file| Jekyll.sanitized_path(options['source'], config_file) }
-    end
-
-    def metadata_file(options)
-      Jekyll.sanitized_path(options['source'], '.jekyll-metadata')
+      %w[yml yaml toml].map do |ext|
+        Jekyll.sanitized_path(options['source'], "_config.#{ext}")
+      end
     end
 
     def to_exclude(options)
       [
         config_files(options),
-        metadata_file(options),
         options['destination'],
         custom_excludes(options)
       ].flatten
@@ -96,7 +89,7 @@ module Jekyll
             # Could not find a relative path
           end
         end
-      end.compact
+      end.compact + [/\.jekyll\-metadata/]
     end
 
   end
