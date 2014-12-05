@@ -1,4 +1,4 @@
-## HEAD
+## 1.2.0 / 2014-12-05
 
   * *Always* ignore `.jekyll-metadata`, even if it doesn't exist. (#18)
   * Ignore `.jekyll-metadata` by default if it exists (#15)
