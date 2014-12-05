@@ -52,13 +52,25 @@ module Jekyll
       Array(options['exclude']).map { |e| Jekyll.sanitized_path(options['source'], e) }
     end
 
-    def to_exclude(options)
-      config_files = [
-        "_config.yml",
-        "_config.yaml",
-        "_config.toml"
+    def config_files(options)
+      %w[
+        _config.yml
+        _config.yaml
+        _config.toml
       ].map { |config_file| Jekyll.sanitized_path(options['source'], config_file) }
-      [config_files, options['destination'], custom_excludes(options)].flatten
+    end
+
+    def metadata_file(options)
+      Jekyll.sanitized_path(options['source'], '.jekyll-metadata')
+    end
+
+    def to_exclude(options)
+      [
+        config_files(options),
+        metadata_file(options),
+        options['destination'],
+        custom_excludes(options)
+      ].flatten
     end
 
     # Paths to ignore for the watch option
