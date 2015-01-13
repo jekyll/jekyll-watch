@@ -71,4 +71,11 @@ RSpec.configure do |config|
   def dest_dir(*files)
     source_dir('_site', *files)
   end
+
+  def site_from_options(options)
+    Jekyll::Site.new(Jekyll::Utils.deep_merge_hashes(
+      Jekyll::Configuration::DEFAULTS,
+      options
+    ))
+  end
 end
