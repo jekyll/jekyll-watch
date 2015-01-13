@@ -34,13 +34,13 @@ module Jekyll
 
     def listen_handler(site)
       proc { |modified, added, removed|
-        t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+        t = Time.now
         c = modified + added + removed
         n = c.length
-        print Jekyll.logger.message("Regenerating:", "#{n} files at #{t} ")
+        print Jekyll.logger.message("Regenerating:", "#{n} file changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
         begin
-          puts  "...done."
           site.process
+          puts  "...done in #{Time.now - t} seconds."
         rescue => e
           puts "...error:"
           Jekyll.logger.warn "Error:", e.message
