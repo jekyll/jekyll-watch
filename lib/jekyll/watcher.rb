@@ -37,7 +37,7 @@ module Jekyll
         t = Time.now
         c = modified + added + removed
         n = c.length
-        print Jekyll.logger.message("Regenerating:", "#{n} file changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
+        print Jekyll.logger.message("Regenerating:", "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
         begin
           site.process
           puts  "...done in #{Time.now - t} seconds."
