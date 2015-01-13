@@ -3,7 +3,8 @@ module Jekyll
     extend self
 
     def watch(options)
-      listener = build_listener(options)
+      site = Jekyll::Site.new(options)
+      listener = build_listener(site, options)
       listener.start
 
       Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options['source']}'"
@@ -21,25 +22,25 @@ module Jekyll
       # You pressed Ctrl-C, oh my!
     end
 
-    def build_listener(options)
+    def build_listener(site, options)
       require 'listen'
       Listen.to(
         options['source'],
         :ignore => listen_ignore_paths(options),
         :force_polling => options['force_polling'],
-        &(listen_handler(options))
+        &(listen_handler(site))
       )
     end
 
-    def listen_handler(options)
+    def listen_handler(site)
       proc { |modified, added, removed|
-        t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+        t = Time.now
         c = modified + added + removed
         n = c.length
-        print Jekyll.logger.message("Regenerating:", "#{n} files at #{t} ")
+        print Jekyll.logger.message("Regenerating:", "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
         begin
-          Jekyll::Command.process_site(Jekyll::Site.new(options))
-          puts  "...done."
+          site.process
+          puts  "...done in #{Time.now - t} seconds."
         rescue => e
           puts "...error:"
           Jekyll.logger.warn "Error:", e.message

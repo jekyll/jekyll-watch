@@ -8,6 +8,7 @@ describe(Jekyll::Watcher) do
     }
   end
   let(:options) { base_opts }
+  let(:site)    { site_from_options(options) }
   let(:default_ignored) { [/_config\.yml/, /_site/, /\.jekyll\-metadata/] }
   subject { described_class }
   before(:each) do
@@ -18,7 +19,7 @@ describe(Jekyll::Watcher) do
   end
 
   context "#build_listener" do
-    let(:listener) { subject.build_listener(options) }
+    let(:listener) { subject.build_listener(site, options) }
 
     it "returns a Listen::Listener" do
       expect(listener).to be_a(Listen::Listener)
@@ -34,7 +35,6 @@ describe(Jekyll::Watcher) do
 
     context "with force_polling turned on" do
       let(:options)  { base_opts.merge('force_polling' => true) }
-      let(:listener) { subject.build_listener(options) }
 
       it "respects the custom value of force_polling" do
         expect(listener.options[:force_polling]).to be(true)
