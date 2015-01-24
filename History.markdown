@@ -1,4 +1,4 @@
-## HEAD
+## 1.2.1 / 2015-01-24
 
   * Show regen time & use the same `Site` object across regens (#21)
 
