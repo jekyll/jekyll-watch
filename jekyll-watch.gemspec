@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "listen", "~> 2.7"
+  spec.add_runtime_dependency "listen", "~> 3.0"
 
   require 'rbconfig'
   if RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
