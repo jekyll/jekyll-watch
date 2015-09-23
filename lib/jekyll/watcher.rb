@@ -1,3 +1,5 @@
+require 'listen'
+
 module Jekyll
   module Watcher
     extend self
@@ -16,14 +18,14 @@ module Jekyll
           exit 0
         end
 
-        loop { sleep 1000 }
+        sleep_forever
       end
     rescue ThreadError => e
       # You pressed Ctrl-C, oh my!
     end
 
+    # TODO: shouldn't be public API
     def build_listener(site, options)
-      require 'listen'
       Listen.to(
         options['source'],
         :ignore => listen_ignore_paths(options),
@@ -93,5 +95,8 @@ module Jekyll
       end.compact + [/\.jekyll\-metadata/]
     end
 
+    def sleep_forever
+      loop { sleep 1000 }
+    end
   end
 end

@@ -7,37 +7,58 @@ describe(Jekyll::Watcher) do
       'destination' => dest_dir
     }
   end
+
   let(:options) { base_opts }
-  let(:site)    { site_from_options(options) }
+  let(:site)    { instance_double(Jekyll::Site) }
   let(:default_ignored) { [/_config\.yml/, /_site/, /\.jekyll\-metadata/] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options['destination']) if options['destination']
   end
+
   after(:each) do
     FileUtils.rm_rf(options['destination']) if options['destination']
   end
 
-  context "#build_listener" do
-    let(:listener) { subject.build_listener(site, options) }
+  describe "#watch" do
+    let(:listener) { instance_double(Listen::Listener) }
 
-    it "returns a Listen::Listener" do
-      expect(listener).to be_a(Listen::Listener)
+    let(:opts) { { ignore: default_ignored, force_polling: options['force_polling'] } }
+
+    before do
+      allow(Listen).to receive(:to).with(options['source'], opts).and_return(listener)
+
+      allow(listener).to receive(:start)
+
+      allow(Jekyll::Site).to receive(:new).with(options).and_return(site)
+      allow(Jekyll.logger).to receive(:info)
+
+      allow(subject).to receive(:sleep_forever)
+
+      subject.watch(options)
+    end
+
+    it 'starts the listener' do
+      expect(listener).to have_received(:start)
+    end
+
+    it 'sleeps' do
+      expect(subject).to have_received(:sleep_forever)
     end
 
     it "ignores the config and site by default" do
-      expect(listener.options[:ignore]).to eql(default_ignored)
+      expect(Listen).to have_received(:to).with(anything, hash_including(ignore: default_ignored))
     end
 
     it "defaults to no force_polling" do
-      expect(listener.options[:force_polling]).to be(nil)
+      expect(Listen).to have_received(:to).with(anything, hash_including(force_polling: nil))
     end
 
     context "with force_polling turned on" do
       let(:options)  { base_opts.merge('force_polling' => true) }
 
       it "respects the custom value of force_polling" do
-        expect(listener.options[:force_polling]).to be(true)
+        expect(Listen).to have_received(:to).with(anything, hash_including(force_polling: true))
       end
     end
   end
