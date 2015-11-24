@@ -10,6 +10,7 @@ matrix:
 env:
   matrix:
     - ""
+    - JEKYLL_VERSION=2.5
     - JEKYLL_VERSION=3.0
 install:
 - travis_retry script/unbundle
