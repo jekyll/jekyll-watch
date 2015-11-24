@@ -10,14 +10,12 @@ matrix:
       env: JEKYLL_VERSION=2.5
 env:
   matrix:
-    - ""
     - JEKYLL_VERSION=2.5
     - JEKYLL_VERSION=3.0
 branches:
   only:
     - master
 install:
-- travis_retry script/unbundle
 - travis_retry script/bootstrap
 script: script/cibuild
 notifications:
