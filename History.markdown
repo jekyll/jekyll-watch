@@ -1,3 +1,7 @@
+## HEAD
+
+  * Test against Jekyll 2 and 3. (#30)
+
 ## 1.3.0 / 2015-09-23
 
   * Lock to Listen 3.x (#25)
