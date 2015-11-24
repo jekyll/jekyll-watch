@@ -10,7 +10,7 @@ describe(Jekyll::Watcher) do
 
   let(:options) { base_opts }
   let(:site)    { instance_double(Jekyll::Site) }
-  let(:default_ignored) { [/_config\.yml/, /_site/, /\.jekyll\-metadata/] }
+  let(:default_ignored) { [/_config\.yml/, /_site\//, /\.jekyll\-metadata/] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options['destination']) if options['destination']
