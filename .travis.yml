@@ -1,8 +1,16 @@
 language: ruby
 rvm:
-- 1.9.3
 - 2.0
 - 2.1
+- 2.2
+matrix:
+  include:
+    - rvm: 1.9.3
+      env: JEKYLL_VERSION=2.5
+env:
+  matrix:
+    - ""
+    - JEKYLL_VERSION=3.0
 install:
 - travis_retry script/unbundle
 - travis_retry script/bootstrap
