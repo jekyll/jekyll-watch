@@ -88,7 +88,7 @@ describe(Jekyll::Watcher) do
     end
 
     context "with a custom destination" do
-      let(:default_ignored) { [/_config\.yml/, /_dest/, /\.jekyll\-metadata/] }
+      let(:default_ignored) { [/_config\.yml/, /_dest\//, /\.jekyll\-metadata/] }
 
       context "when source is absolute" do
         context "when destination is absolute" do
