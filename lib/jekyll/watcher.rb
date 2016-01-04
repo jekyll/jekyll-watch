@@ -5,6 +5,8 @@ module Jekyll
     extend self
 
     def watch(options)
+      ENV["LISTEN_GEM_DEBUGGING"] ||= "1" if options['verbose']
+
       site = Jekyll::Site.new(options)
       listener = build_listener(site, options)
       listener.start
