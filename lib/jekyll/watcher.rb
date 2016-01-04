@@ -64,11 +64,19 @@ module Jekyll
     end
 
     def to_exclude(options)
+      # prepending a slash to the destination directory will ensure that
+      # other files starting with _site aren't also ignored by Listen
+      destination = "#{options['destination']}/"
+
       [
         config_files(options),
-        options['destination'],
+        destination,
         custom_excludes(options)
       ].flatten
+    end
+
+    def has_trailing_slash(path)
+      path[-1] == '/'
     end
 
     # Paths to ignore for the watch option
@@ -81,12 +89,16 @@ module Jekyll
       paths        = to_exclude(options)
 
       paths.map do |p|
+        is_dir = has_trailing_slash(p)
         absolute_path = Pathname.new(p).expand_path
+
         if absolute_path.exist?
           begin
             relative_path = absolute_path.relative_path_from(source).to_s
-            unless relative_path.start_with?('../')
-              path_to_ignore = Regexp.new(Regexp.escape(relative_path))
+            recovered_path = is_dir ? "#{relative_path}/" : relative_path
+
+            unless recovered_path.start_with?('../')
+              path_to_ignore = Regexp.new(Regexp.escape(recovered_path))
               Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
               path_to_ignore
             end
