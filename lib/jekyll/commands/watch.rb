@@ -19,7 +19,7 @@ module Jekyll
       # options - A Hash of options passed to the command
       #
       # Returns nothing.
-      def watch(site, options)
+      def watch(_site, options)
         Jekyll::Watcher.watch(options)
       end
 
