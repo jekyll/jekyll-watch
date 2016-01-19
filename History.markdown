@@ -1,7 +1,8 @@
-## HEAD
+## 1.3.1 / 2016-01-19
 
   * Test against Jekyll 2 and 3. (#30)
   * watcher: set `LISTEN_GEM_DEBUGGING` if `--verbose` flag set (#31)
+  * Apply Rubocop auditing and fix up (#32)
 
 ## 1.3.0 / 2015-09-23
 
