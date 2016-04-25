@@ -1,8 +1,6 @@
-## HEAD
+## 1.4.0 / 2016-04-25
 
-### Bug Fixes
-
-  * Fix #37: Lock Listen to less than 3.1. (#38)
+  * Lock Listen to less than 3.1. (#38)
 
 ## 1.3.1 / 2016-01-19
 
