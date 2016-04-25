@@ -13,6 +13,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  # XXX: Remove the lock with Jekyll 4 or in 2017 when Ruby 2.1 goes EOL.
   spec.add_runtime_dependency "listen", "~> 3.0", "< 3.1"
 
   require 'rbconfig'
