@@ -1,3 +1,9 @@
+## HEAD
+
+### Bug Fixes
+
+  * Fix #37: Lock Listen to less than 3.1. (#38)
+
 ## 1.3.1 / 2016-01-19
 
   * Test against Jekyll 2 and 3. (#30)
