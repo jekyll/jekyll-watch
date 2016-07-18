@@ -63,6 +63,28 @@ describe(Jekyll::Watcher) do
     end
   end
 
+  describe "#watch using site instance" do
+    let(:listener) { instance_double(Listen::Listener) }
+
+    let(:opts) { { ignore: default_ignored, force_polling: nil } }
+
+    before do
+      allow(Listen).to receive(:to).with(options['source'], opts).and_return(listener)
+
+      allow(listener).to receive(:start)
+
+      allow(Jekyll.logger).to receive(:info)
+
+      allow(subject).to receive(:sleep_forever)
+
+      subject.watch(options, site)
+    end
+
+    it 'does not create a new site instance' do
+      expect(listener).to have_received(:start)
+    end
+  end
+
   context "#listen_ignore_paths" do
     let(:ignored) { subject.listen_ignore_paths(options) }
     let(:metadata_path) { Jekyll.sanitized_path(options['source'], '.jekyll-metadata') }
