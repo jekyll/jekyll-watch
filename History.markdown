@@ -1,4 +1,4 @@
-## HEAD
+## 1.5.0 / 2016-07-20
 
   * reuse provided site instance if available (#40)
 
