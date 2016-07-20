@@ -1,3 +1,7 @@
+## HEAD
+
+  * reuse provided site instance if available (#40)
+
 ## 1.4.0 / 2016-04-25
 
   * Lock Listen to less than 3.1. (#38)
