@@ -18,12 +18,13 @@ module Jekyll
     # Returns nothing.
     def watch(options, site = nil)
       ENV["LISTEN_GEM_DEBUGGING"] ||= "1" if options['verbose']
+      @source = options['source']
 
       site ||= Jekyll::Site.new(options)
       listener = build_listener(site, options)
       listener.start
 
-      Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options["source"]}'"
+      Jekyll.logger.info "Auto-regeneration:", "enabled for #{@source}".green
 
       unless options['serving']
         trap("INT") do
@@ -41,10 +42,10 @@ module Jekyll
     # TODO: shouldn't be public API
     def build_listener(site, options)
       Listen.to(
-        options['source'],
+        @source,
         :ignore => listen_ignore_paths(options),
         :force_polling => options['force_polling'],
-        &(listen_handler(site))
+        &(listen_handler site)
       )
     end
 
@@ -53,21 +54,16 @@ module Jekyll
         t = Time.now
         c = modified + added + removed
         n = c.length
-        print Jekyll.logger.message("Regenerating:",
+        Jekyll.logger.info("Regenerating:",
           "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
-        begin
-          site.process
-          puts "...done in #{Time.now - t} seconds."
-        rescue => e
-          puts "...error:"
-          Jekyll.logger.warn "Error:", e.message
-          Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
-        end
+        relative_paths = c.map { |p| Jekyll.sanitized_path(@source, p) }
+        relative_paths.each { |f| Jekyll.logger.info "", f.cyan }
+        process site, t
       end
     end
 
     def custom_excludes(options)
-      Array(options['exclude']).map { |e| Jekyll.sanitized_path(options['source'], e) }
+      Array(options['exclude']).map { |e| Jekyll.sanitized_path(@source, e) }
     end
 
     def config_files(options)
@@ -90,7 +86,7 @@ module Jekyll
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source       = Pathname.new(options['source']).expand_path
+      source       = Pathname.new(@source).expand_path
       paths        = to_exclude(options)
 
       paths.map do |p|
@@ -111,6 +107,22 @@ module Jekyll
 
     def sleep_forever
       loop { sleep 1000 }
+    end
+
+    private
+
+    def process(site, time)
+      site.process
+      Jekyll.logger.info "", "...done in #{Time.now - time} seconds.".green
+      print_clear_line
+    rescue => e
+      Jekyll.logger.warn "Error:", e.message
+      Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
+      print_clear_line
+    end
+
+    def print_clear_line
+      Jekyll.logger.info ""
     end
   end
 end
