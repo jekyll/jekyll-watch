@@ -1,3 +1,9 @@
+## HEAD
+
+### Development Fixes
+
+  * Update versions for Travis (#43)
+
 ## 1.5.0 / 2016-07-20
 
   * reuse provided site instance if available (#40)
