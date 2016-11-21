@@ -18,13 +18,12 @@ module Jekyll
     # Returns nothing.
     def watch(options, site = nil)
       ENV["LISTEN_GEM_DEBUGGING"] ||= "1" if options['verbose']
-      @source = options['source']
 
       site ||= Jekyll::Site.new(options)
       listener = build_listener(site, options)
       listener.start
 
-      Jekyll.logger.info "Auto-regeneration:", "enabled for #{@source}".green
+      Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options["source"]}'".green
 
       unless options['serving']
         trap("INT") do
@@ -42,10 +41,10 @@ module Jekyll
     # TODO: shouldn't be public API
     def build_listener(site, options)
       Listen.to(
-        @source,
+        options['source'],
         :ignore => listen_ignore_paths(options),
         :force_polling => options['force_polling'],
-        &(listen_handler site)
+        &(listen_handler(site))
       )
     end
 
@@ -56,14 +55,14 @@ module Jekyll
         n = c.length
         Jekyll.logger.info("Regenerating:",
           "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
-        relative_paths = c.map { |p| Jekyll.sanitized_path(@source, p) }
+        relative_paths = c.map { |p| site.in_source_dir(p) }
         relative_paths.each { |f| Jekyll.logger.info "", f.cyan }
         process site, t
       end
     end
 
     def custom_excludes(options)
-      Array(options['exclude']).map { |e| Jekyll.sanitized_path(@source, e) }
+      Array(options['exclude']).map { |e| Jekyll.sanitized_path(options['source'], e) }
     end
 
     def config_files(options)
@@ -86,7 +85,7 @@ module Jekyll
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source       = Pathname.new(@source).expand_path
+      source       = Pathname.new(options['source']).expand_path
       paths        = to_exclude(options)
 
       paths.map do |p|
