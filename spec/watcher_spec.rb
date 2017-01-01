@@ -10,7 +10,7 @@ describe(Jekyll::Watcher) do
 
   let(:options) { base_opts }
   let(:site)    { instance_double(Jekyll::Site) }
-  let(:default_ignored) { [/_config\.yml/, /_site/, /\.jekyll\-metadata/] }
+  let(:default_ignored) { [/^_config\.yml/, /^_site/, /^\.jekyll\-metadata/] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options['destination']) if options['destination']
@@ -104,13 +104,13 @@ describe(Jekyll::Watcher) do
       after(:each)  { FileUtils.rm(excluded_absolute) }
 
       it "ignores the excluded files" do
-        expect(ignored).to include(/README\.md/)
-        expect(ignored).to include(/LICENSE/)
+        expect(ignored).to include(/^README\.md/)
+        expect(ignored).to include(/^LICENSE/)
       end
     end
 
     context "with a custom destination" do
-      let(:default_ignored) { [/_config\.yml/, /_dest/, /\.jekyll\-metadata/] }
+      let(:default_ignored) { [/^_config\.yml/, /^_dest/, /^\.jekyll\-metadata/] }
 
       context "when source is absolute" do
         context "when destination is absolute" do

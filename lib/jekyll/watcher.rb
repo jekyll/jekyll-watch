@@ -99,14 +99,14 @@ module Jekyll
         begin
           relative_path = absolute_path.relative_path_from(source).to_s
           unless relative_path.start_with?('../')
-            path_to_ignore = Regexp.new(Regexp.escape(relative_path))
+            path_to_ignore = Regexp.new("^" + Regexp.escape(relative_path))
             Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
             path_to_ignore
           end
         rescue ArgumentError
           # Could not find a relative path
         end
-      end.compact + [/\.jekyll\-metadata/]
+      end.compact + [/^\.jekyll\-metadata/]
     end
 
     def sleep_forever
