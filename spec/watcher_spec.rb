@@ -98,14 +98,21 @@ describe(Jekyll::Watcher) do
 
     context "with something excluded" do
       let(:excluded) { ['README.md', 'LICENSE'] }
-      let(:excluded_absolute) { excluded.map { |p| Jekyll.sanitized_path(options['source'], p) }}
+      let(:included) { ['OTHER-LICENSE'] }
+      let(:test_files) {(excluded + included).map { |p|
+        Jekyll.sanitized_path(options['source'], p)
+      }}
       let(:options) { base_opts.merge('exclude' => excluded) }
-      before(:each) { FileUtils.touch(excluded_absolute) }
-      after(:each)  { FileUtils.rm(excluded_absolute) }
+      before(:each) { FileUtils.touch(test_files) }
+      after(:each)  { FileUtils.rm(test_files) }
 
       it "ignores the excluded files" do
-        expect(ignored).to include(/^README\.md/)
-        expect(ignored).to include(/^LICENSE/)
+        expect(ignored).to include( match("README.md") )
+        expect(ignored).to include( match("LICENSE") )
+      end
+
+      it "does not exclude files that submatch the exclude list" do
+        expect(ignored).to_not include( match("OTHER-LICENSE") )
       end
     end
 
