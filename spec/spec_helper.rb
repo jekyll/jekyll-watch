@@ -1,6 +1,6 @@
 require 'jekyll'
-require File.expand_path('../../lib/jekyll-watch.rb', __FILE__)
-TEST_DIR = File.expand_path('..', __FILE__)
+require File.expand_path('../lib/jekyll-watch.rb', __dir__)
+TEST_DIR = File.expand_path(__dir__)
 
 RSpec.configure do |config|
   # These two settings work together to allow you to limit a spec run
