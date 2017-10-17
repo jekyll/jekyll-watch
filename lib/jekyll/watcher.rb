@@ -1,4 +1,6 @@
-require 'listen'
+# frozen_string_literal: true
+
+require "listen"
 
 module Jekyll
   module Watcher
@@ -17,7 +19,7 @@ module Jekyll
     #
     # Returns nothing.
     def watch(options, site = nil)
-      ENV["LISTEN_GEM_DEBUGGING"] ||= "1" if options['verbose']
+      ENV["LISTEN_GEM_DEBUGGING"] ||= "1" if options["verbose"]
 
       site ||= Jekyll::Site.new(options)
       listener = build_listener(site, options)
@@ -25,7 +27,7 @@ module Jekyll
 
       Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options["source"]}'"
 
-      unless options['serving']
+      unless options["serving"]
         trap("INT") do
           listener.stop
           puts "     Halting auto-regeneration."
@@ -41,10 +43,10 @@ module Jekyll
     # TODO: shouldn't be public API
     def build_listener(site, options)
       Listen.to(
-        options['source'],
-        :ignore => listen_ignore_paths(options),
-        :force_polling => options['force_polling'],
-        &(listen_handler(site))
+        options["source"],
+        :ignore        => listen_ignore_paths(options),
+        :force_polling => options["force_polling"],
+        &listen_handler(site)
       )
     end
 
@@ -67,20 +69,20 @@ module Jekyll
     end
 
     def custom_excludes(options)
-      Array(options['exclude']).map { |e| Jekyll.sanitized_path(options['source'], e) }
+      Array(options["exclude"]).map { |e| Jekyll.sanitized_path(options["source"], e) }
     end
 
     def config_files(options)
       %w(yml yaml toml).map do |ext|
-        Jekyll.sanitized_path(options['source'], "_config.#{ext}")
+        Jekyll.sanitized_path(options["source"], "_config.#{ext}")
       end
     end
 
     def to_exclude(options)
       [
         config_files(options),
-        options['destination'],
-        custom_excludes(options)
+        options["destination"],
+        custom_excludes(options),
       ].flatten
     end
 
@@ -90,7 +92,7 @@ module Jekyll
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source       = Pathname.new(options['source']).expand_path
+      source       = Pathname.new(options["source"]).expand_path
       paths        = to_exclude(options)
 
       paths.map do |p|
@@ -98,7 +100,7 @@ module Jekyll
         next unless absolute_path.exist?
         begin
           relative_path = absolute_path.relative_path_from(source).to_s
-          unless relative_path.start_with?('../')
+          unless relative_path.start_with?("../")
             path_to_ignore = Regexp.new(Regexp.escape(relative_path))
             Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
             path_to_ignore
@@ -106,7 +108,7 @@ module Jekyll
         rescue ArgumentError
           # Could not find a relative path
         end
-      end.compact + [/\.jekyll\-metadata/]
+      end.compact + [%r!\.jekyll\-metadata!]
     end
 
     def sleep_forever
