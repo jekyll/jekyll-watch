@@ -1,5 +1,7 @@
 ## HEAD
 
+  * Remove version lock for dependency listen (#50)
+
 ### Development Fixes
 
   * Update versions for Travis (#43)
