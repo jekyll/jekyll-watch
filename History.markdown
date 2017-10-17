@@ -1,6 +1,7 @@
 ## HEAD
 
   * Remove version lock for dependency listen (#50)
+  * Inherit Jekyll&#39;s rubocop config for consistency (#51)
 
 ### Development Fixes
 
