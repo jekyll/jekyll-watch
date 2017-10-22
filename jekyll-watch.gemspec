@@ -21,8 +21,8 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_development_dependency "bundler", "~> 1.15"
-  spec.add_development_dependency "rubocop", "~> 0.5"
+  spec.add_development_dependency "jekyll", ENV["JEKYLL_VERSION"] ? "~> #{ENV["JEKYLL_VERSION"]}" : ">= 2.0"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "jekyll", ENV["JEKYLL_VERSION"] ? "~> #{ENV["JEKYLL_VERSION"]}" : ">= 2.0"
+  spec.add_development_dependency "rubocop", "~> 0.5"
 end
