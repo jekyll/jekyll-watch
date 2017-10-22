@@ -7,6 +7,7 @@
 
   * Update versions for Travis (#43)
   * Define path with __dir__ (#48)
+  * Update jekyll-watch (#53)
 
 ## 1.5.0 / 2016-07-20
 
