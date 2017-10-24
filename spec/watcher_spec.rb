@@ -99,7 +99,7 @@ describe(Jekyll::Watcher) do
   end
 
   context "#listen_ignore_paths" do
-    let(:ignored) { subject.listen_ignore_paths(options) }
+    let(:ignored) { subject.send(:listen_ignore_paths, options) }
     let(:metadata_path) { Jekyll.sanitized_path(options["source"], ".jekyll-metadata") }
 
     before(:each) { FileUtils.touch(metadata_path) }
