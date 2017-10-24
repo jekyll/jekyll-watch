@@ -4,9 +4,6 @@ rvm:
 - 2.2
 - 2.3
 - 2.4
-env:
-  matrix:
-    - JEKYLL_VERSION=3.0
 branches:
   only:
     - master
