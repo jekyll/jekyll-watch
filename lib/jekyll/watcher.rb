@@ -58,7 +58,7 @@ module Jekyll
         Jekyll.logger.info "Regenerating:",
           "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
 
-        c.map { |path| path.sub(site.source, "") }.each do |file|
+        c.map { |path| path.sub("#{site.source}/", "") }.each do |file|
           Jekyll.logger.info "", file
         end
 
