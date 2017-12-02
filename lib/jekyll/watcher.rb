@@ -55,16 +55,14 @@ module Jekyll
         t = Time.now
         c = modified + added + removed
         n = c.length
-        print Jekyll.logger.message("Regenerating:",
-          "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
-        begin
-          site.process
-          puts "...done in #{Time.now - t} seconds."
-        rescue => e
-          puts "...error:"
-          Jekyll.logger.warn "Error:", e.message
-          Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
+        Jekyll.logger.info "Regenerating:",
+          "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
+
+        c.map { |path| path.sub("#{site.source}/", "") }.each do |file|
+          Jekyll.logger.info "", file
         end
+
+        process(site, t)
       end
     end
 
@@ -113,6 +111,18 @@ module Jekyll
 
     def sleep_forever
       loop { sleep 1000 }
+    end
+
+    private
+    def process(site, time)
+      begin
+        site.process
+        Jekyll.logger.info "", "...done in #{Time.now - time} seconds."
+      rescue => e
+        Jekyll.logger.warn "Error:", e.message
+        Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
+      end
+      puts ""
     end
   end
 end
