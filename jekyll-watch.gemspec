@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+lib = File.expand_path("lib", __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require "jekyll-watch/version"
+
 Gem::Specification.new do |spec|
   spec.name          = "jekyll-watch"
-  spec.version       = "1.5.0"
+  spec.version       = Jekyll::Watch::VERSION
   spec.authors       = ["Parker Moore"]
   spec.email         = ["parkrmoore@gmail.com"]
   spec.summary       = "Rebuild your Jekyll site when a file changes with the `--watch` switch."
