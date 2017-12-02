@@ -14,6 +14,10 @@
 
   * Output regenerated file paths to terminal (#57)
 
+### Major Enhancements
+
+  * Remove unnecessary method (#56)
+
 ## 1.5.0 / 2016-07-20
 
   * reuse provided site instance if available (#40)
