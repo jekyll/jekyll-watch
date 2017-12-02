@@ -10,6 +10,10 @@
   * Update jekyll-watch (#53)
   * Drop support for old Ruby and old Jekyll (#55)
 
+### Minor Enhancements
+
+  * Output regenerated file paths to terminal (#57)
+
 ## 1.5.0 / 2016-07-20
 
   * reuse provided site instance if available (#40)
