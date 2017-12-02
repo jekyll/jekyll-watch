@@ -40,7 +40,7 @@ module Jekyll
       # You pressed Ctrl-C, oh my!
     end
 
-    # TODO: shouldn't be public API
+    private
     def build_listener(site, options)
       Listen.to(
         options["source"],
@@ -50,6 +50,7 @@ module Jekyll
       )
     end
 
+    private
     def listen_handler(site)
       proc do |modified, added, removed|
         t = Time.now
@@ -66,16 +67,19 @@ module Jekyll
       end
     end
 
+    private
     def custom_excludes(options)
       Array(options["exclude"]).map { |e| Jekyll.sanitized_path(options["source"], e) }
     end
 
+    private
     def config_files(options)
       %w(yml yaml toml).map do |ext|
         Jekyll.sanitized_path(options["source"], "_config.#{ext}")
       end
     end
 
+    private
     def to_exclude(options)
       [
         config_files(options),
@@ -89,6 +93,7 @@ module Jekyll
     # options - A Hash of options passed to the command
     #
     # Returns a list of relative paths from source that should be ignored
+    private
     def listen_ignore_paths(options)
       source       = Pathname.new(options["source"]).expand_path
       paths        = to_exclude(options)
@@ -109,6 +114,7 @@ module Jekyll
       end.compact + [%r!\.jekyll\-metadata!]
     end
 
+    private
     def sleep_forever
       loop { sleep 1000 }
     end
