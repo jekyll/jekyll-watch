@@ -1,12 +1,13 @@
 ## HEAD
 
-  * Remove version lock for dependency listen (#50)
-  * Inherit Jekyll&#39;s rubocop config for consistency (#51)
+## 2.0.0 / 2016-12-02
 
 ### Development Fixes
 
   * Update versions for Travis (#43)
   * Define path with __dir__ (#48)
+  * Remove version lock for dependency listen (#50)
+  * Inherit Jekyll&#39;s rubocop config for consistency (#51)
   * Update jekyll-watch (#53)
   * Drop support for old Ruby and old Jekyll (#55)
 
