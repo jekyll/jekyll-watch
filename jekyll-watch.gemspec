@@ -19,7 +19,8 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 2.1.0"
 
-  spec.add_runtime_dependency "listen", "~> 3.0"
+  spec.add_runtime_dependency "listen",
+    RUBY_VERSION < "2.2.5" ? ("~> 3.0", "< 3.1") : "~> 3.0"
 
   require "rbconfig"
   if RbConfig::CONFIG["host_os"] =~ %r!mswin|mingw|cygwin!
