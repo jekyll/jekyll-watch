@@ -8,6 +8,8 @@ rvm:
 branches:
   only:
     - master
+before_install: 
+- gem update --system
 install:
 - travis_retry script/bootstrap
 script: script/cibuild
