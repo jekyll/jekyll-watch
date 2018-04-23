@@ -73,4 +73,13 @@ RSpec.configure do |config|
   def dest_dir(*files)
     source_dir("_site", *files)
   end
+
+  def ignore_path?(patterns, path)
+    path = path.to_s
+    patterns.each do |pattern|
+      return true if path =~ pattern
+      next
+    end
+    false
+  end
 end
