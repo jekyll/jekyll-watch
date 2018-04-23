@@ -30,7 +30,7 @@ module Jekyll
       unless options["serving"]
         trap("INT") do
           listener.stop
-          puts "     Halting auto-regeneration."
+          Jekyll.logger.info "", "Halting auto-regeneration."
           exit 0
         end
 
@@ -128,7 +128,7 @@ module Jekyll
         Jekyll.logger.warn "Error:", e.message
         Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
       end
-      puts ""
+      Jekyll.logger.info ""
     end
   end
 end
