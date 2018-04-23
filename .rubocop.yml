@@ -2,7 +2,7 @@ inherit_gem:
   jekyll: .rubocop.yml
 
 AllCops:
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.1
   Include:
     - lib/**/*.rb
 
@@ -22,7 +22,7 @@ Lint/HandleExceptions:
   Exclude:
     - lib/jekyll/watcher.rb
 
-Lint/RescueWithoutErrorClass:
+Style/RescueStandardError:
   Exclude:
     - lib/jekyll/watcher.rb
 
