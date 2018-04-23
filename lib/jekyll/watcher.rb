@@ -103,6 +103,7 @@ module Jekyll
         next unless absolute_path.exist?
         begin
           relative_path = absolute_path.relative_path_from(source).to_s
+          relative_path = File.join(relative_path, "") if absolute_path.directory?
           unless relative_path.start_with?("../")
             path_to_ignore = Regexp.new(Regexp.escape(relative_path))
             Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
