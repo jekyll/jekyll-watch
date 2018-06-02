@@ -26,6 +26,10 @@ module Jekyll
       listener.start
 
       Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options["source"]}'"
+      if options["livereload_sleep"]
+        Jekyll.logger.info "LiveReload:", "auto-regeneration delayed "\
+        "#{options["livereload_sleep"]} second(s)"
+      end
 
       unless options["serving"]
         trap("INT") do
@@ -44,8 +48,9 @@ module Jekyll
     def build_listener(site, options)
       Listen.to(
         options["source"],
-        :ignore        => listen_ignore_paths(options),
-        :force_polling => options["force_polling"],
+        :ignore         => listen_ignore_paths(options),
+        :force_polling  => options["force_polling"],
+        :wait_for_delay => options["livereload_sleep"],
         &listen_handler(site)
       )
     end
