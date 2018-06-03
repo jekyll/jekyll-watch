@@ -26,7 +26,8 @@ describe(Jekyll::Watcher) do
     let(:listener) { instance_double(Listen::Listener) }
 
     let(:opts) do
-      { :ignore => default_ignored, :force_polling => options["force_polling"] }
+      { :ignore => default_ignored, :force_polling => options["force_polling"],
+        :wait_for_delay => options["livereload_sleep"], }
     end
 
     before do
@@ -62,6 +63,12 @@ describe(Jekyll::Watcher) do
         .with(anything, hash_including(:force_polling => nil))
     end
 
+    it "defaults to no livereload_sleep" do
+      expect(Listen)
+        .to have_received(:to)
+        .with(anything, hash_including(:wait_for_delay => nil))
+    end
+
     context "with force_polling turned on" do
       let(:options) { base_opts.merge("force_polling" => true) }
 
@@ -76,7 +83,9 @@ describe(Jekyll::Watcher) do
   describe "#watch using site instance" do
     let(:listener) { instance_double(Listen::Listener) }
 
-    let(:opts) { { :ignore => default_ignored, :force_polling => nil } }
+    let(:opts) do
+      { :ignore => default_ignored, :force_polling => nil, :wait_for_delay => nil }
+    end
 
     before do
       allow(Listen)
