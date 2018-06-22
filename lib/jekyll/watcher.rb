@@ -42,29 +42,28 @@ module Jekyll
 
     private
     def build_listener(site, options)
-      Listen.to(
-        options["source"],
-        :ignore        => listen_ignore_paths(options),
-        :force_polling => options["force_polling"],
-        &listen_handler(site)
-      )
-    end
+      source_path = options["source"]
 
-    private
-    def listen_handler(site)
-      proc do |modified, added, removed|
+      Listen.to(
+        source_path,
+        :ignore        => listen_ignore_paths(options),
+        :force_polling => options["force_polling"]
+      ) do |modified, added, removed|
         t = Time.now
-        c = modified + added + removed
+        c = normalize_encoding(modified + added + removed, source_path.encoding)
         n = c.length
+
         Jekyll.logger.info "Regenerating:",
           "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
 
-        c.map { |path| path.sub("#{site.source}/", "") }.each do |file|
-          Jekyll.logger.info "", file
-        end
-
+        c.each { |path| Jekyll.logger.info "", path.sub("#{source_path}/", "") }
         process(site, t)
       end
+    end
+
+    private
+    def normalize_encoding(list, desired_encoding)
+      list.map { |entry| entry.encode!(desired_encoding, entry.encoding) }
     end
 
     private

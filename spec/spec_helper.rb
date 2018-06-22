@@ -67,7 +67,7 @@ RSpec.configure do |config|
   end
 
   def source_dir(*files)
-    test_dir("test-site", *files)
+    test_dir("test-sité", *files)
   end
 
   def dest_dir(*files)
