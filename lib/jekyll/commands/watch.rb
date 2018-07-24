@@ -13,7 +13,6 @@ module Jekyll
         Jekyll.logger.log_level = :error if options["quiet"]
         Jekyll::Watcher.watch(options) if options["watch"]
       end
-
     end
   end
 end
