@@ -80,17 +80,17 @@ module Jekyll
     def to_exclude(options)
       # prepending a slash to the destination directory will ensure that
       # other files starting with _site aren't also ignored by Listen
-      destination = "#{options['destination']}/"
+      destination = "#{options["destination"]}/"
 
       [
         config_files(options),
         destination,
-        custom_excludes(options)
+        custom_excludes(options),
       ].flatten
     end
 
-    def has_trailing_slash(path)
-      path[-1] == '/'
+    def trailing_slash?(path)
+      path[-1] == "/"
     end
 
     # Paths to ignore for the watch option
@@ -103,19 +103,18 @@ module Jekyll
       paths        = to_exclude(options)
 
       paths.map do |p|
-        is_dir = has_trailing_slash(p)
+        is_dir = trailing_slash?(p)
         absolute_path = Pathname.new(p).expand_path
+
         next unless absolute_path.exist?
-          begin
-            relative_path = absolute_path.relative_path_from(source).to_s
-            recovered_path = is_dir ? "#{relative_path}/" : relative_path
-            unless recovered_path.start_with?('../')
-              path_to_ignore = Regexp.new(Regexp.escape(recovered_path))
-              path_to_ignore
-              Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
-            end
-          rescue ArgumentError
-            # Could not find a relative path
+        begin
+          relative_path = absolute_path.relative_path_from(source).to_s
+          recovered_path = is_dir ? "#{relative_path}/" : relative_path
+
+          unless recovered_path.start_with?("../")
+            path_to_ignore = Regexp.new(Regexp.escape(recovered_path))
+            Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
+            path_to_ignore
           end
         rescue ArgumentError
           # Could not find a relative path

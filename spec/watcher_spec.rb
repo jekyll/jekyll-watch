@@ -12,7 +12,7 @@ describe(Jekyll::Watcher) do
 
   let(:options) { base_opts }
   let(:site)    { instance_double(Jekyll::Site) }
-  let(:default_ignored) { [/_config\.yml/, /#{Regexp.escape('_site/')}/, /\.jekyll\-metadata/] }
+  let(:default_ignored) { [%r!_config\.yml!, %r!#{Regexp.escape('_site/')}!, %r!\.jekyll\-metadata!] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options["destination"]) if options["destination"]
@@ -125,7 +125,7 @@ describe(Jekyll::Watcher) do
     end
 
     context "with a custom destination" do
-      let(:default_ignored) { [/_config\.yml/, /#{Regexp.escape('_dest/')}/, /\.jekyll\-metadata/] }
+      let(:default_ignored) { [%r!_config\.yml!, %r!#{Regexp.escape('_dest/')}!, %r!\.jekyll\-metadata!] }
 
       context "when source is absolute" do
         context "when destination is absolute" do
