@@ -82,6 +82,7 @@ module Jekyll
     def to_exclude(options)
       [
         config_files(options),
+        options["cache_dir"],
         options["destination"],
         custom_excludes(options),
       ].flatten
