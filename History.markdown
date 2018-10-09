@@ -4,6 +4,10 @@
 
   * Test against Ruby 2.5 (#62)
 
+### Bug Fixes
+
+  * Normalize watched-path encoding (#69)
+
 ## 2.0.0 / 2016-12-02
 
 ### Development Fixes
