@@ -1,12 +1,14 @@
-## HEAD
-
-### Development Fixes
-
-  * Test against Ruby 2.5 (#62)
+## 2.1.0 / 2016-12-02
 
 ### Bug Fixes
 
   * Normalize watched-path encoding (#69)
+
+### Development Fixes
+
+  * Test against Ruby 2.5 (#62)
+  * Drop support for Ruby 2.2 (EOL)
+  * Style: lint with rubocop-jekyll
 
 ## 2.0.0 / 2016-12-02
 
