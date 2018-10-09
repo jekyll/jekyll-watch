@@ -99,6 +99,7 @@ module Jekyll
       paths.map do |p|
         absolute_path = Pathname.new(p).expand_path
         next unless absolute_path.exist?
+
         begin
           relative_path = absolute_path.relative_path_from(source).to_s
           unless relative_path.start_with?("../")
