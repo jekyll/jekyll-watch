@@ -136,7 +136,7 @@ describe(Jekyll::Watcher) do
         end
 
         context "when destination is relative" do
-          let(:options) { base_opts.merge("destination" => "spec/test-site/_dest") }
+          let(:options) { base_opts.merge("destination" => "spec/test-sité/_dest") }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
           end
@@ -159,7 +159,7 @@ describe(Jekyll::Watcher) do
         end
 
         context "when destination is relative" do
-          let(:options) { base_opts.merge("destination" => "spec/test-site/_dest") }
+          let(:options) { base_opts.merge("destination" => "spec/test-sité/_dest") }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
           end

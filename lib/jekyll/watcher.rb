@@ -54,17 +54,19 @@ module Jekyll
     def listen_handler(site)
       proc do |modified, added, removed|
         t = Time.now
-        c = modified + added + removed
+        c = normalize_encoding(modified + added + removed, site.source.encoding)
         n = c.length
+
         Jekyll.logger.info "Regenerating:",
                            "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
 
-        c.map { |path| path.sub("#{site.source}/", "") }.each do |file|
-          Jekyll.logger.info "", file
-        end
-
+        c.each { |path| Jekyll.logger.info "", path.sub("#{source_path}/", "") }
         process(site, t)
       end
+    end
+
+    def normalize_encoding(list, desired_encoding)
+      list.map { |entry| entry.encode!(desired_encoding, entry.encoding) }
     end
 
     def custom_excludes(options)
