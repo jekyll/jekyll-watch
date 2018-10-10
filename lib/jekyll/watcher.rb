@@ -60,7 +60,7 @@ module Jekyll
         Jekyll.logger.info "Regenerating:",
                            "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
 
-        c.each { |path| Jekyll.logger.info "", path.sub("#{source_path}/", "") }
+        c.each { |path| Jekyll.logger.info "", path.sub("#{site.source}/", "") }
         process(site, t)
       end
     end
