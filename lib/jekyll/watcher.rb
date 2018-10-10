@@ -93,8 +93,8 @@ module Jekyll
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source       = Pathname.new(options["source"]).expand_path
-      paths        = to_exclude(options)
+      source = Pathname.new(options["source"]).expand_path
+      paths  = to_exclude(options)
 
       paths.map do |p|
         absolute_path = Pathname.new(p).expand_path
