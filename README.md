@@ -2,8 +2,8 @@
 
 Rebuild your Jekyll site when a file changes with the `--watch` switch.
 
-[![Linux Build Status](https://travis-ci.org/jekyll/jekyll-watch.svg?branch=master)][travis]
-[![Windows Build status](https://img.shields.io/appveyor/ci/jekyll/jekyll-watch/master.svg?label=Windows%20build)][appveyor]
+[![Linux Build Status](https://img.shields.io/travis/jekyll/jekyll-watch/master.svg?label=Linux%20build&logo=travis)][travis]
+[![Windows Build status](https://img.shields.io/appveyor/ci/jekyll/jekyll-watch/master.svg?label=Windows%20build&logo=appveyor)][appveyor]
 
 [travis]: https://travis-ci.org/jekyll/jekyll-watch
 [appveyor]: https://ci.appveyor.com/project/jekyll/jekyll-watch
