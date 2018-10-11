@@ -1,3 +1,9 @@
+## HEAD
+
+### Development Fixes
+
+  * Initialize AppVeyor CI to test plugin on Windows (#77)
+
 ## 2.1.1 / 2018-10-10
 
 ### Bug Fixes
