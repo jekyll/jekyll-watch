@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "歡迎使用Jekyll"
+date:   2014-08-08 18:00:36
+categories: jekyll update
+---
+你會在你的`_posts`目錄中找到這篇文章 - 編輯它並重新構建（或使用`--watch`開關運行）來查看你的更改。
+
+要添加新帖子，只需在`_posts`目錄中添加一個文件，該文件遵循慣例`YYYY-MM-DD-name-of-post.ext`並包含必要的前置事項。 看看這篇文章的來源，了解它的工作原理。
+
+Jekyll還為代碼片段提供強大的支持：
+
+{% highlight ruby %}
+def print_hi(name)
+  puts "Hi, #{name}"
+end
+print_hi('Tom')
+#=> prints 'Hi, Tom' to STDOUT.
+{% endhighlight %}
+
+查看[Jekyll docs] [jekyll]了解更多關於如何充分利用Jekyll的信息。 在[Jekyll的GitHub repo] [jekyll-gh]提交所有錯誤/功能請求。 如果您有疑問，可以在[Jekyll的專用幫助存儲庫] [jekyll-help]上詢問。
+
+[jekyll]:      http://jekyllrb.com
+[jekyll-gh]:   https://github.com/jekyll/jekyll
+[jekyll-help]: https://github.com/jekyll/jekyll-help
