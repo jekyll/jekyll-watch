@@ -4,6 +4,10 @@
 
   * Initialize AppVeyor CI to test plugin on Windows (#77)
 
+### Bug Fixes
+
+  * Fix watcher failure due to incorrect file name encoding (#78)
+
 ## 2.1.1 / 2018-10-10
 
 ### Bug Fixes
