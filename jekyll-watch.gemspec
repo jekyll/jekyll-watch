@@ -21,11 +21,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "listen", "~> 3.0"
 
-  require "rbconfig"
-  if RbConfig::CONFIG["host_os"] =~ %r!mswin|mingw|cygwin!
-    spec.add_runtime_dependency "wdm", "~> 0.1.0"
-  end
-
   spec.add_development_dependency "bundler", "~> 1.15"
   spec.add_development_dependency "jekyll", "~> 3.6"
   spec.add_development_dependency "rake"
