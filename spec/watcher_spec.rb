@@ -99,7 +99,7 @@ describe(Jekyll::Watcher) do
   end
 
   context "#listen_ignore_paths" do
-    let(:ignored) { subject.listen_ignore_paths(options) }
+    let(:ignored) { subject.send(:listen_ignore_paths, options) }
     let(:metadata_path) { Jekyll.sanitized_path(options["source"], ".jekyll-metadata") }
 
     before(:each) { FileUtils.touch(metadata_path) }
@@ -136,7 +136,7 @@ describe(Jekyll::Watcher) do
         end
 
         context "when destination is relative" do
-          let(:options) { base_opts.merge("destination" => "spec/test-site/_dest") }
+          let(:options) { base_opts.merge("destination" => "spec/test-sité/_dest") }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
           end
@@ -159,7 +159,7 @@ describe(Jekyll::Watcher) do
         end
 
         context "when destination is relative" do
-          let(:options) { base_opts.merge("destination" => "spec/test-site/_dest") }
+          let(:options) { base_opts.merge("destination" => "spec/test-sité/_dest") }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
           end

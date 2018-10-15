@@ -1,14 +1,49 @@
 ## HEAD
 
-  * Remove version lock for dependency listen (#50)
-  * Inherit Jekyll&#39;s rubocop config for consistency (#51)
+### Development Fixes
+
+  * Initialize AppVeyor CI to test plugin on Windows (#77)
+
+### Bug Fixes
+
+  * Fix watcher failure due to incorrect file name encoding (#78)
+
+## 2.1.1 / 2018-10-10
+
+### Bug Fixes
+
+  * Replace non-existent local variable (#73)
+
+## 2.1.0 / 2018-10-09
+
+### Bug Fixes
+
+  * Normalize watched-path encoding (#69)
+
+### Development Fixes
+
+  * Test against Ruby 2.5 (#62)
+  * Drop support for Ruby 2.2 (EOL)
+  * Style: lint with rubocop-jekyll
+
+## 2.0.0 / 2016-12-02
 
 ### Development Fixes
 
   * Update versions for Travis (#43)
   * Define path with __dir__ (#48)
+  * Remove version lock for dependency listen (#50)
+  * Inherit Jekyll&#39;s rubocop config for consistency (#51)
   * Update jekyll-watch (#53)
   * Drop support for old Ruby and old Jekyll (#55)
+
+### Minor Enhancements
+
+  * Output regenerated file paths to terminal (#57)
+
+### Major Enhancements
+
+  * Remove unnecessary method (#56)
 
 ## 1.5.0 / 2016-07-20
 

@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+lib = File.expand_path("lib", __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require "jekyll-watch/version"
+
 Gem::Specification.new do |spec|
   spec.name          = "jekyll-watch"
-  spec.version       = "1.5.0"
+  spec.version       = Jekyll::Watch::VERSION
   spec.authors       = ["Parker Moore"]
   spec.email         = ["parkrmoore@gmail.com"]
   spec.summary       = "Rebuild your Jekyll site when a file changes with the `--watch` switch."
@@ -13,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r!^bin/!) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.required_ruby_version = ">= 2.1.0"
+  spec.required_ruby_version = ">= 2.3.0"
 
   spec.add_runtime_dependency "listen", "~> 3.0"
 
@@ -21,5 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "jekyll", "~> 3.6"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rubocop", "~> 0.5"
+  spec.add_development_dependency "rubocop-jekyll", "~> 0.2"
 end

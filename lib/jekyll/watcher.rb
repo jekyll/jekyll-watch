@@ -30,7 +30,7 @@ module Jekyll
       unless options["serving"]
         trap("INT") do
           listener.stop
-          puts "     Halting auto-regeneration."
+          Jekyll.logger.info "", "Halting auto-regeneration."
           exit 0
         end
 
@@ -40,7 +40,8 @@ module Jekyll
       # You pressed Ctrl-C, oh my!
     end
 
-    # TODO: shouldn't be public API
+    private
+
     def build_listener(site, options)
       Listen.to(
         options["source"],
@@ -55,16 +56,12 @@ module Jekyll
         t = Time.now
         c = modified + added + removed
         n = c.length
-        print Jekyll.logger.message("Regenerating:",
-          "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
-        begin
-          site.process
-          puts "...done in #{Time.now - t} seconds."
-        rescue => e
-          puts "...error:"
-          Jekyll.logger.warn "Error:", e.message
-          Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
-        end
+
+        Jekyll.logger.info "Regenerating:",
+                           "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
+
+        c.each { |path| Jekyll.logger.info "", path["#{site.source}/".length..-1] }
+        process(site, t)
       end
     end
 
@@ -92,12 +89,13 @@ module Jekyll
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source       = Pathname.new(options["source"]).expand_path
-      paths        = to_exclude(options)
+      source = Pathname.new(options["source"]).expand_path
+      paths  = to_exclude(options)
 
       paths.map do |p|
         absolute_path = Pathname.new(p).expand_path
         next unless absolute_path.exist?
+
         begin
           relative_path = absolute_path.relative_path_from(source).to_s
           unless relative_path.start_with?("../")
@@ -113,6 +111,17 @@ module Jekyll
 
     def sleep_forever
       loop { sleep 1000 }
+    end
+
+    def process(site, time)
+      begin
+        site.process
+        Jekyll.logger.info "", "...done in #{Time.now - time} seconds."
+      rescue => e
+        Jekyll.logger.warn "Error:", e.message
+        Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
+      end
+      Jekyll.logger.info ""
     end
   end
 end
