@@ -1,4 +1,4 @@
-## HEAD
+## 2.1.2 / 2018-10-17
 
 ### Development Fixes
 
