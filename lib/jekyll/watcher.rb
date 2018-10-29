@@ -54,13 +54,13 @@ module Jekyll
     def listen_handler(site)
       proc do |modified, added, removed|
         t = Time.now
-        c = normalize_encoding(modified + added + removed, site.source.encoding)
+        c = modified + added + removed
         n = c.length
 
         Jekyll.logger.info "Regenerating:",
                            "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
 
-        c.each { |path| Jekyll.logger.info "", path.sub("#{source_path}/", "") }
+        c.each { |path| Jekyll.logger.info "", path["#{site.source}/".length..-1] }
         process(site, t)
       end
     end

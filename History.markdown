@@ -1,4 +1,20 @@
-## 2.1.0 / 2016-12-02
+## 2.1.2 / 2018-10-17
+
+### Development Fixes
+
+  * Initialize AppVeyor CI to test plugin on Windows (#77)
+
+### Bug Fixes
+
+  * Fix watcher failure due to incorrect file name encoding (#78)
+
+## 2.1.1 / 2018-10-10
+
+### Bug Fixes
+
+  * Replace non-existent local variable (#73)
+
+## 2.1.0 / 2018-10-09
 
 ### Bug Fixes
 
