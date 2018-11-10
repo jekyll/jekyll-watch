@@ -4,6 +4,10 @@
 
   * chore(deps): rubocop-jekyll 0.3 (#79)
 
+### Bug Fixes
+
+  * Fix encoding discrepancy in excluded Windows paths (#76)
+
 ## 2.1.2 / 2018-10-17
 
 ### Development Fixes
