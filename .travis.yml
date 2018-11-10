@@ -1,15 +1,15 @@
 sudo: false
 language: ruby
 rvm:
-- 2.1.9
-- 2.2.5
-- 2.3.1
-env:
-  matrix:
-    - JEKYLL_VERSION=3.0
+  - 2.3
+  - 2.4
+  - 2.5
 branches:
   only:
     - master
+before_install: 
+- gem update --system
+- gem install bundler
 install:
 - travis_retry script/bootstrap
 script: script/cibuild

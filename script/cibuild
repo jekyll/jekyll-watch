@@ -1,4 +1,4 @@
 #!/bin/bash
 
 time script/test
-time bundle exec rubocop
+time script/fmt

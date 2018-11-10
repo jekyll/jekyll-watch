@@ -1,4 +1,6 @@
-require 'listen'
+# frozen_string_literal: true
+
+require "listen"
 
 module Jekyll
   module Watcher
@@ -17,7 +19,7 @@ module Jekyll
     #
     # Returns nothing.
     def watch(options, site = nil)
-      ENV["LISTEN_GEM_DEBUGGING"] ||= "1" if options['verbose']
+      ENV["LISTEN_GEM_DEBUGGING"] ||= "1" if options["verbose"]
 
       site ||= Jekyll::Site.new(options)
       listener = build_listener(site, options)
@@ -25,10 +27,10 @@ module Jekyll
 
       Jekyll.logger.info "Auto-regeneration:", "enabled for '#{options["source"]}'"
 
-      unless options['serving']
+      unless options["serving"]
         trap("INT") do
           listener.stop
-          puts "     Halting auto-regeneration."
+          Jekyll.logger.info "", "Halting auto-regeneration."
           exit 0
         end
 
@@ -38,13 +40,14 @@ module Jekyll
       # You pressed Ctrl-C, oh my!
     end
 
-    # TODO: shouldn't be public API
+    private
+
     def build_listener(site, options)
       Listen.to(
-        options['source'],
-        :ignore => listen_ignore_paths(options),
-        :force_polling => options['force_polling'],
-        &(listen_handler(site))
+        options["source"],
+        :ignore        => listen_ignore_paths(options),
+        :force_polling => options["force_polling"],
+        &listen_handler(site)
       )
     end
 
@@ -53,34 +56,39 @@ module Jekyll
         t = Time.now
         c = modified + added + removed
         n = c.length
-        print Jekyll.logger.message("Regenerating:",
-          "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")} ")
-        begin
-          site.process
-          puts "...done in #{Time.now - t} seconds."
-        rescue => e
-          puts "...error:"
-          Jekyll.logger.warn "Error:", e.message
-          Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
-        end
+
+        Jekyll.logger.info "Regenerating:",
+                           "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
+
+        c.each { |path| Jekyll.logger.info "", path["#{site.source}/".length..-1] }
+        process(site, t)
+      end
+    end
+
+    def normalize_encoding(obj, desired_encoding)
+      case obj
+      when Array
+        obj.map { |entry| entry.encode!(desired_encoding, entry.encoding) }
+      when String
+        obj.encode!(desired_encoding, obj.encoding)
       end
     end
 
     def custom_excludes(options)
-      Array(options['exclude']).map { |e| Jekyll.sanitized_path(options['source'], e) }
+      Array(options["exclude"]).map { |e| Jekyll.sanitized_path(options["source"], e) }
     end
 
     def config_files(options)
       %w(yml yaml toml).map do |ext|
-        Jekyll.sanitized_path(options['source'], "_config.#{ext}")
+        Jekyll.sanitized_path(options["source"], "_config.#{ext}")
       end
     end
 
     def to_exclude(options)
       [
         config_files(options),
-        options['destination'],
-        custom_excludes(options)
+        options["destination"],
+        custom_excludes(options),
       ].flatten
     end
 
@@ -90,12 +98,13 @@ module Jekyll
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source       = Pathname.new(options['source']).expand_path
-      paths        = to_exclude(options)
+      source = Pathname.new(options["source"]).expand_path
+      paths  = to_exclude(options)
 
       paths.map do |p|
-        absolute_path = Pathname.new(p).expand_path
+        absolute_path = Pathname.new(normalize_encoding(p, options["source"].encoding)).expand_path
         next unless absolute_path.exist?
+
         begin
           relative_path = absolute_path.relative_path_from(source).to_s
           unless relative_path.start_with?('../')
@@ -106,11 +115,22 @@ module Jekyll
         rescue ArgumentError
           # Could not find a relative path
         end
-      end.compact + [/^\.jekyll\-metadata/]
+      end.compact + [%r!^\.jekyll\-metadata!]
     end
 
     def sleep_forever
       loop { sleep 1000 }
+    end
+
+    def process(site, time)
+      begin
+        site.process
+        Jekyll.logger.info "", "...done in #{Time.now - time} seconds."
+      rescue StandardError => e
+        Jekyll.logger.warn "Error:", e.message
+        Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
+      end
+      Jekyll.logger.info ""
     end
   end
 end
