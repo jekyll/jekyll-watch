@@ -12,7 +12,7 @@ describe(Jekyll::Watcher) do
 
   let(:options) { base_opts }
   let(:site)    { instance_double(Jekyll::Site) }
-  let(:default_ignored) { [%r!_config\.yml!, %r!_site!, %r!\.jekyll\-metadata!] }
+  let(:default_ignored) { [%r!^_config\.yml!, %r!^_site/!, %r!^\.jekyll\-metadata!] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options["destination"]) if options["destination"]
@@ -107,6 +107,10 @@ describe(Jekyll::Watcher) do
 
     it "ignores config.yml, .jekyll-metadata, and _site by default" do
       expect(ignored).to eql(default_ignored)
+      expect(ignore_path?(ignored, "_site/foo.html")).to eql(true)
+      expect(ignore_path?(ignored, "_sitemapper/foo.html")).to eql(false)
+      expect(ignore_path?(ignored, "bar/_site/foo.html")).to eql(false)
+      expect(ignore_path?(ignored, "bar/_site-mapper.html")).to eql(false)
     end
 
     context "with something excluded" do
@@ -119,19 +123,23 @@ describe(Jekyll::Watcher) do
       after(:each)  { FileUtils.rm(excluded_absolute) }
 
       it "ignores the excluded files" do
-        expect(ignored).to include(%r!README\.md!)
-        expect(ignored).to include(%r!LICENSE!)
+        expect(ignore_path?(ignored, "README.md")).to eql(true)
+        expect(ignore_path?(ignored, "LICENSE")).to eql(true)
       end
     end
 
     context "with a custom destination" do
-      let(:default_ignored) { [%r!_config\.yml!, %r!_dest!, %r!\.jekyll\-metadata!] }
+      let(:default_ignored) { [%r!^_config\.yml!, %r!^_dest/!, %r!^\.jekyll\-metadata!] }
 
       context "when source is absolute" do
         context "when destination is absolute" do
           let(:options) { base_opts.merge("destination" => source_dir("_dest")) }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
+            expect(ignore_path?(ignored, "_dest/foo.html")).to eql(true)
+            expect(ignore_path?(ignored, "_destination/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest-nation.html")).to eql(false)
           end
         end
 
@@ -139,6 +147,10 @@ describe(Jekyll::Watcher) do
           let(:options) { base_opts.merge("destination" => "spec/test-sité/_dest") }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
+            expect(ignore_path?(ignored, "_dest/foo.html")).to eql(true)
+            expect(ignore_path?(ignored, "_destination/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest-nation.html")).to eql(false)
           end
         end
       end
@@ -155,6 +167,10 @@ describe(Jekyll::Watcher) do
           let(:options) { base_opts.merge("destination" => source_dir("_dest")) }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
+            expect(ignore_path?(ignored, "_dest/foo.html")).to eql(true)
+            expect(ignore_path?(ignored, "_destination/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest-nation.html")).to eql(false)
           end
         end
 
@@ -162,6 +178,10 @@ describe(Jekyll::Watcher) do
           let(:options) { base_opts.merge("destination" => "spec/test-sité/_dest") }
           it "ignores the destination" do
             expect(ignored).to eql(default_ignored)
+            expect(ignore_path?(ignored, "_dest/foo.html")).to eql(true)
+            expect(ignore_path?(ignored, "_destination/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest/foo.html")).to eql(false)
+            expect(ignore_path?(ignored, "bar/_dest-nation.html")).to eql(false)
           end
         end
       end
