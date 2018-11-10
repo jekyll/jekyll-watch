@@ -65,6 +65,15 @@ module Jekyll
       end
     end
 
+    def normalize_encoding(obj, desired_encoding)
+      case obj
+      when Array
+        obj.map { |entry| entry.encode!(desired_encoding, entry.encoding) }
+      when String
+        obj.encode!(desired_encoding, obj.encoding)
+      end
+    end
+
     def custom_excludes(options)
       Array(options["exclude"]).map { |e| Jekyll.sanitized_path(options["source"], e) }
     end
@@ -93,7 +102,7 @@ module Jekyll
       paths  = to_exclude(options)
 
       paths.map do |p|
-        absolute_path = Pathname.new(p).expand_path
+        absolute_path = Pathname.new(normalize_encoding(p, options["source"].encoding)).expand_path
         next unless absolute_path.exist?
 
         begin
