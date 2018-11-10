@@ -7,6 +7,7 @@
 ### Bug Fixes
 
   * Fix encoding discrepancy in excluded Windows paths (#76)
+  * Ignore directories rather than all similar paths (#65)
 
 ## 2.1.2 / 2018-10-17
 
