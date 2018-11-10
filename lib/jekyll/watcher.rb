@@ -117,7 +117,7 @@ module Jekyll
       begin
         site.process
         Jekyll.logger.info "", "...done in #{Time.now - time} seconds."
-      rescue => e
+      rescue StandardError => e
         Jekyll.logger.warn "Error:", e.message
         Jekyll.logger.warn "Error:", "Run jekyll build --trace for more information."
       end

@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 require: rubocop-jekyll
 inherit_gem:
   rubocop-jekyll: .rubocop.yml
@@ -8,29 +10,4 @@ AllCops:
     - lib/**/*.rb
 
   Exclude:
-    - .gitignore
-    - .rspec
-    - .rubocop.yml
-    - .travis.yml
-    - History.markdown
-    - Gemfile.lock
-    - LICENSE.txt
-    - README.md
-    - script/**/*
     - vendor/**/*
-
-Lint/HandleExceptions:
-  Exclude:
-    - lib/jekyll/watcher.rb
-
-Style/RescueStandardError:
-  Exclude:
-    - lib/jekyll/watcher.rb
-
-Metrics/BlockLength:
-  Exclude:
-    - spec/**/*
-
-Metrics/LineLength:
-    Exclude:
-      - jekyll-watch.gemspec
