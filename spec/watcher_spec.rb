@@ -12,7 +12,7 @@ describe(Jekyll::Watcher) do
 
   let(:options) { base_opts }
   let(:site)    { instance_double(Jekyll::Site) }
-  let(:default_ignored) { [%r!_config\.yml!, %r!_site!, %r!\.jekyll\-metadata!] }
+  let(:default_ignored) { [%r!^_config\.yml!, %r!^_site!, %r!^\.jekyll\-metadata!] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options["destination"]) if options["destination"]
@@ -110,22 +110,27 @@ describe(Jekyll::Watcher) do
     end
 
     context "with something excluded" do
-      let(:excluded) { ["README.md", "LICENSE"] }
-      let(:excluded_absolute) do
-        excluded.map { |p| Jekyll.sanitized_path(options["source"], p) }
-      end
-      let(:options) { base_opts.merge("exclude" => excluded) }
-      before(:each) { FileUtils.touch(excluded_absolute) }
-      after(:each)  { FileUtils.rm(excluded_absolute) }
+      let(:excluded) { ['README.md', 'LICENSE'] }
+      let(:included) { ['OTHER-LICENSE'] }
+      let(:test_files) {(excluded + included).map { |p|
+        Jekyll.sanitized_path(options['source'], p)
+      }}
+      let(:options) { base_opts.merge('exclude' => excluded) }
+      before(:each) { FileUtils.touch(test_files) }
+      after(:each)  { FileUtils.rm(test_files) }
 
       it "ignores the excluded files" do
-        expect(ignored).to include(%r!README\.md!)
-        expect(ignored).to include(%r!LICENSE!)
+        expect(ignored).to include( match("README.md") )
+        expect(ignored).to include( match("LICENSE") )
+      end
+
+      it "does not exclude files that submatch the exclude list" do
+        expect(ignored).to_not include( match("OTHER-LICENSE") )
       end
     end
 
     context "with a custom destination" do
-      let(:default_ignored) { [%r!_config\.yml!, %r!_dest!, %r!\.jekyll\-metadata!] }
+      let(:default_ignored) { [%r!^_config\.yml!, %r!^_dest!, %r!^\.jekyll\-metadata!] }
 
       context "when source is absolute" do
         context "when destination is absolute" do
