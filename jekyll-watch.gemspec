@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
 
   require "rbconfig"
   if RbConfig::CONFIG["host_os"] =~ %r!mswin|mingw|cygwin!
-    spec.add_runtime_dependency "wdm", "~> 0.1.0"
+    spec.add_runtime_dependency "wdm", "~> 0.1"
   end
 
   spec.add_development_dependency "bundler"
