@@ -1,13 +1,20 @@
 ## HEAD
 
-### Development Fixes
+### Major Enhancements
 
-  * chore(deps): rubocop-jekyll 0.3 (#79)
+  * Drop support for Ruby 2.3
+  * Test against Ruby 2.6
+  * Relax version constraint on bundler to allow using 1.x or 2.x
 
 ### Bug Fixes
 
   * Fix encoding discrepancy in excluded Windows paths (#76)
   * Ignore directories rather than all similar paths (#65)
+
+### Development Fixes
+
+  * dependencies: rubocop-jekyll 0.5
+  * style: target Ruby 2.4
 
 ## 2.1.2 / 2018-10-17
 
