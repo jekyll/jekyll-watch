@@ -1,10 +1,8 @@
-## HEAD
+## 2.2.0 / 2019-03-22
 
 ### Major Enhancements
 
   * Drop support for Ruby 2.3
-  * Test against Ruby 2.6
-  * Relax version constraint on bundler to allow using 1.x or 2.x
 
 ### Bug Fixes
 
@@ -13,6 +11,8 @@
 
 ### Development Fixes
 
+  * Test against Ruby 2.6
+  * Relax version constraint on bundler to allow using 1.x or 2.x
   * dependencies: rubocop-jekyll 0.5
   * style: target Ruby 2.4
 
