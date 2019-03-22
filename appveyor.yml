@@ -8,12 +8,21 @@ build: off
 
 environment:
   matrix:
-    - RUBY_FOLDER_VER: "26-x64"
     - RUBY_FOLDER_VER: "26"
+      JEKYLL_VERSION : ">= 4.0.0.pre.alpha1"
     - RUBY_FOLDER_VER: "23"
+      JEKYLL_VERSION : ">= 4.0.0.pre.alpha1"
+    - RUBY_FOLDER_VER: "26"
+      JEKYLL_VERSION : "~> 3.7.0"
+    - RUBY_FOLDER_VER: "23"
+      JEKYLL_VERSION : "~> 3.7.0"
+    - RUBY_FOLDER_VER: "26"
+      JEKYLL_VERSION : "~> 3.6.0"
+    - RUBY_FOLDER_VER: "23"
+      JEKYLL_VERSION : "~> 3.6.0"
 
 install:
-  - SET PATH=C:\Ruby%RUBY_FOLDER_VER%\bin;%PATH%
+  - SET PATH=C:\Ruby%RUBY_FOLDER_VER%-x64\bin;%PATH%
   - bundle install --retry 5 --jobs=%NUMBER_OF_PROCESSORS% --clean --path vendor\bundle
 
 test_script:

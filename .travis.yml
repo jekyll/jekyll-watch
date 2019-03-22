@@ -1,9 +1,16 @@
-
 language: ruby
 cache: bundler
 rvm:
-  - 2.6
-  - 2.3
+  - &ruby1 2.6.2
+  - &ruby2 2.3.8
+matrix:
+  include:
+    - rvm: *ruby1
+      env: JEKYLL_VERSION=">= 4.0.0.pre.alpha1"
+    - rvm: *ruby1
+      env: JEKYLL_VERSION="~> 3.7.0"
+    - rvm: *ruby1
+      env: JEKYLL_VERSION="~> 3.6.0"
 branches:
   only:
     - master
