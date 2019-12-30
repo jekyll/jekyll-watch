@@ -88,12 +88,8 @@ module Jekyll
     end
 
     def config_files(options)
-      # only check to exclude config file when config file is within our src directory
-      # which can only happen if our src directory is the same as our cwd.
-      if Pathname.new(options["source"]).expand_path.eql?(Pathname.new(".").expand_path)
-        %w(yml yaml toml).map(&"^_config\.".method(:+))
-      else
-        []
+      %w(yml yaml toml).map do |ext|
+        Jekyll.sanitized_path(options["source"], "_config.#{ext}")
       end
     end
 
@@ -115,23 +111,22 @@ module Jekyll
     #         to ignore.
     def listen_ignore_paths(options)
       source = Pathname.new(options["source"]).expand_path
-      exclusion_fnmatch_paths = Array.new()
+      exclusion_fnmatch_paths = []
 
       exclusion_regexps = to_exclude(options).map do |path|
         # convert to absolute path from the source directory
         absolute_path = Pathname.new(path).expand_path
-        relative_path = absolute_path.relative_path_from(source)
+        relative_path = absolute_path.relative_path_from(source).to_s
 
-        unless absolute_path.exist?
+        if !absolute_path.exist?
           # maybe wildcard, or just a file that doesn't exist.
-          exclusion_fnmatch_paths << relative_path.to_s
-          nil
+          nil.tap { exclusion_fnmatch_paths << relative_path }
         else
           relative_path = File.join(relative_path, "") if absolute_path.directory?
 
           begin
             unless relative_path.start_with?("../")
-              Regexp.new(Regexp.escape(relative_path)).tap do |pattern|
+              %r!^#{Regexp.escape(relative_path)}!.tap do |pattern|
                 Jekyll.logger.debug "Watcher:", "Ignoring #{pattern}"
               end
             end

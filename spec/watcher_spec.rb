@@ -1,3 +1,4 @@
+# coding: utf-8
 require "spec_helper"
 
 describe(Jekyll::Watcher) do
@@ -97,7 +98,7 @@ describe(Jekyll::Watcher) do
   end
 
   context "#listen_ignore_paths" do
-    let(:ignored) { subject.send(:listen_ignore_paths, options) }
+    let(:ignored) { subject.send(:listen_ignore_paths, options)[0] }
     let(:metadata_path) { Jekyll.sanitized_path(options["source"], ".jekyll-metadata") }
 
     before(:each) { FileUtils.touch(metadata_path) }
