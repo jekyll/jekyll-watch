@@ -43,25 +43,33 @@ module Jekyll
     private
 
     def build_listener(site, options)
+      ignore_regexps, ignore_paths = listen_ignore_paths(options)
+
       Listen.to(
         options["source"],
-        :ignore        => listen_ignore_paths(options),
+        :ignore        => ignore_regexps,
         :force_polling => options["force_polling"],
-        &listen_handler(site)
+        &listen_handler(site, ignore_paths)
       )
     end
 
-    def listen_handler(site)
+    def listen_handler(site, ignore_paths)
       proc do |modified, added, removed|
-        t = Time.now
+        modified = strip_ignore_paths(modified, ignore_paths)
+        added    = strip_ignore_paths(added, ignore_paths)
+        removed  = strip_ignore_paths(removed, ignore_paths)
+
         c = modified + added + removed
-        n = c.length
+        unless c.empty?
+          t = Time.now
+          n = c.length
 
-        Jekyll.logger.info "Regenerating:",
-                           "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
+          Jekyll.logger.info "Regenerating:",
+                             "#{n} file(s) changed at #{t.strftime("%Y-%m-%d %H:%M:%S")}"
 
-        c.each { |path| Jekyll.logger.info "", path["#{site.source}/".length..-1] }
-        process(site, t)
+          c.each { |path| Jekyll.logger.info "", path["#{site.source}/".length..-1] }
+          process(site, t)
+        end
       end
     end
 
@@ -74,13 +82,18 @@ module Jekyll
       end
     end
 
+    # paths that user specified to be excluded in their _config.yml file.
     def custom_excludes(options)
-      Array(options["exclude"]).map { |e| Jekyll.sanitized_path(options["source"], e) }
+      options.fetch("exclude", []).map { |e| Jekyll.sanitized_path(options["source"], e) }
     end
 
     def config_files(options)
-      %w(yml yaml toml).map do |ext|
-        Jekyll.sanitized_path(options["source"], "_config.#{ext}")
+      # only check to exclude config file when config file is within our src directory
+      # which can only happen if our src directory is the same as our cwd.
+      if Pathname.new(options["source"]).expand_path.eql?(Pathname.new(".").expand_path)
+        %w(yml yaml toml).map(&"^_config\.".method(:+))
+      else
+        []
       end
     end
 
@@ -89,34 +102,54 @@ module Jekyll
         config_files(options),
         options["destination"],
         custom_excludes(options),
-      ].flatten
+      ].flatten.map { |e| normalize_encoding(e, options["source"].encoding) }
     end
 
     # Paths to ignore for the watch option
     #
     # options - A Hash of options passed to the command
     #
-    # Returns a list of relative paths from source that should be ignored
+    # Returns a tuple where the first entry is a list of regular
+    #         expressions relating to exact (existing) files to
+    #         ignore and the second is a list of fnmatch patterns
+    #         to ignore.
     def listen_ignore_paths(options)
       source = Pathname.new(options["source"]).expand_path
-      paths  = to_exclude(options)
+      exclusion_fnmatch_paths = Array.new()
 
-      paths.map do |p|
-        absolute_path = Pathname.new(normalize_encoding(p, options["source"].encoding)).expand_path
-        next unless absolute_path.exist?
+      exclusion_regexps = to_exclude(options).map do |path|
+        # convert to absolute path from the source directory
+        absolute_path = Pathname.new(path).expand_path
+        relative_path = absolute_path.relative_path_from(source)
 
-        begin
-          relative_path = absolute_path.relative_path_from(source).to_s
+        unless absolute_path.exist?
+          # maybe wildcard, or just a file that doesn't exist.
+          exclusion_fnmatch_paths << relative_path.to_s
+          nil
+        else
           relative_path = File.join(relative_path, "") if absolute_path.directory?
-          unless relative_path.start_with?("../")
-            path_to_ignore = %r!^#{Regexp.escape(relative_path)}!
-            Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
-            path_to_ignore
+
+          begin
+            unless relative_path.start_with?("../")
+              Regexp.new(Regexp.escape(relative_path)).tap do |pattern|
+                Jekyll.logger.debug "Watcher:", "Ignoring #{pattern}"
+              end
+            end
+          rescue ArgumentError
+            # Could not find a relative path
           end
-        rescue ArgumentError
-          # Could not find a relative path
         end
       end.compact + [%r!^\.jekyll\-metadata!]
+
+      [exclusion_regexps, exclusion_fnmatch_paths]
+    end
+
+    # remove any paths from PATHS which're matched to by some fnmatch
+    # pattern in IGNORE_PATTERNS
+    def strip_ignore_paths(paths, ignore_patterns)
+      paths.select do |path|
+        ignore_patterns.find { |pattern| File.fnmatch?(pattern, path) }.nil?
+      end
     end
 
     def sleep_forever
