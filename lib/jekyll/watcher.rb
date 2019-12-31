@@ -60,6 +60,7 @@ module Jekyll
         removed  = strip_ignore_paths(removed, ignore_paths)
 
         c = modified + added + removed
+
         unless c.empty?
           t = Time.now
           n = c.length
@@ -83,8 +84,11 @@ module Jekyll
     end
 
     # paths that user specified to be excluded in their _config.yml file.
+    # could be nil, a single string or an array of strings.
+    #
+    # Returns an array of paths joined to the src directory.
     def custom_excludes(options)
-      options.fetch("exclude", []).map { |e| Jekyll.sanitized_path(options["source"], e) }
+      Array(options["exclude"]).map { |e| Jekyll.sanitized_path(options["source"], e) }
     end
 
     def config_files(options)
@@ -98,7 +102,7 @@ module Jekyll
         config_files(options),
         options["destination"],
         custom_excludes(options),
-      ].flatten.map { |e| normalize_encoding(e, options["source"].encoding) }
+      ].flat_map { |e| normalize_encoding(e, options["source"].encoding) }
     end
 
     # Paths to ignore for the watch option
@@ -118,21 +122,21 @@ module Jekyll
         absolute_path = Pathname.new(path).expand_path
         relative_path = absolute_path.relative_path_from(source).to_s
 
-        if !absolute_path.exist?
-          # maybe wildcard, or just a file that doesn't exist.
-          nil.tap { exclusion_fnmatch_paths << relative_path }
-        else
+        if absolute_path.exist?
           relative_path = File.join(relative_path, "") if absolute_path.directory?
 
           begin
-            unless relative_path.start_with?("../")
-              %r!^#{Regexp.escape(relative_path)}!.tap do |pattern|
-                Jekyll.logger.debug "Watcher:", "Ignoring #{pattern}"
-              end
+            next if relative_path.start_with?("../")
+
+            %r!^#{Regexp.escape(relative_path)}!.tap do |pattern|
+              Jekyll.logger.debug "Watcher:", "Ignoring #{pattern}"
             end
           rescue ArgumentError
             # Could not find a relative path
           end
+        else
+          # maybe wildcard, or just a file that doesn't exist.
+          nil.tap { exclusion_fnmatch_paths << relative_path }
         end
       end.compact + [%r!^\.jekyll\-metadata!]
 
@@ -143,6 +147,7 @@ module Jekyll
     # pattern in IGNORE_PATTERNS
     def strip_ignore_paths(paths, ignore_patterns)
       paths.select do |path|
+        # true when every patten in ignore_patterns does not match to path.
         ignore_patterns.find { |pattern| File.fnmatch?(pattern, path) }.nil?
       end
     end
