@@ -126,6 +126,35 @@ describe(Jekyll::Watcher) do
       end
     end
 
+    context "with excluded globs" do
+      let(:excluded) { ["foo/**/*"] }
+      let(:excluded_relative_paths) do
+        ["foo/bar/sit.md", "foo/lore/sit.md", "foo/barsite.md"]
+      end
+      let(:excluded_absolute_dirs) do
+        ["foo", "foo/bar", "foo/lore"].map do |path|
+          Jekyll.sanitized_path(options["source"], path)
+        end
+      end
+      let(:excluded_absolute_files) do
+        excluded_relative_paths.map { |p| Jekyll.sanitized_path(options["source"], p) }
+      end
+      let(:options) { base_opts.merge("exclude" => excluded) }
+      before(:each) do
+        FileUtils.mkdir_p(excluded_absolute_dirs)
+        FileUtils.touch(excluded_absolute_files)
+      end
+      after(:each) do
+        FileUtils.rm_rf(excluded_absolute_files + excluded_absolute_dirs)
+      end
+
+      it "ignores the excluded files" do
+        excluded_relative_paths.each do |path|
+          expect(ignore_path?(ignored, path)).to eql(true)
+        end
+      end
+    end
+
     context "with a custom destination" do
       let(:default_ignored) { [%r!^_config\.yml!, %r!^_dest/!, %r!^\.jekyll\-metadata!] }
 
