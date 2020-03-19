@@ -10,8 +10,6 @@ environment:
   matrix:
     - RUBY_FOLDER_VER: "26"
       JEKYLL_VERSION : ">= 4.0.0.pre.alpha1"
-    - RUBY_FOLDER_VER: "23"
-      JEKYLL_VERSION : ">= 4.0.0.pre.alpha1"
     - RUBY_FOLDER_VER: "26"
       JEKYLL_VERSION : "~> 3.7.0"
     - RUBY_FOLDER_VER: "23"
