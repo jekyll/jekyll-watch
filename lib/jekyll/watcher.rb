@@ -92,13 +92,20 @@ module Jekyll
       ].flatten
     end
 
+    def to_exclude_regexps(options)
+      [
+        "^\\.jekyll\\-metadata",
+        options.fetch("watch_exclude", nil),
+      ].flatten.compact.map(&Regexp.method(:new))
+    end
+
     # Paths to ignore for the watch option
     #
     # options - A Hash of options passed to the command
     #
     # Returns a list of relative paths from source that should be ignored
     def listen_ignore_paths(options)
-      source = Pathname.new(options["source"]).expand_path
+      source = Pathname.new(options["source"]).expand_path + ".*"
       paths  = to_exclude(options)
 
       paths.map do |p|
@@ -116,7 +123,7 @@ module Jekyll
         rescue ArgumentError
           # Could not find a relative path
         end
-      end.compact + [%r!^\.jekyll\-metadata!]
+      end.compact + to_exclude_regexps(options)
     end
 
     def sleep_forever
