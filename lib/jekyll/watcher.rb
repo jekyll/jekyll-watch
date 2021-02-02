@@ -36,7 +36,7 @@ module Jekyll
 
         sleep_forever
       end
-    rescue ThreadError
+    rescue ThreadError, SystemExit
       # You pressed Ctrl-C, oh my!
     end
 
