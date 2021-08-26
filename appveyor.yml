@@ -9,15 +9,13 @@ build: off
 environment:
   matrix:
     - RUBY_FOLDER_VER: "26"
-      JEKYLL_VERSION : ">= 4.0.0.pre.alpha1"
+      JEKYLL_VERSION : "~> 4.0"
     - RUBY_FOLDER_VER: "26"
-      JEKYLL_VERSION : "~> 3.7.0"
-    - RUBY_FOLDER_VER: "23"
-      JEKYLL_VERSION : "~> 3.7.0"
-    - RUBY_FOLDER_VER: "26"
-      JEKYLL_VERSION : "~> 3.6.0"
-    - RUBY_FOLDER_VER: "23"
-      JEKYLL_VERSION : "~> 3.6.0"
+      JEKYLL_VERSION : "~> 3.9"
+    - RUBY_FOLDER_VER: "25"
+      JEKYLL_VERSION : "~> 4.0"
+    - RUBY_FOLDER_VER: "25"
+      JEKYLL_VERSION : "~> 3.9"
 
 install:
   - SET PATH=C:\Ruby%RUBY_FOLDER_VER%-x64\bin;%PATH%
