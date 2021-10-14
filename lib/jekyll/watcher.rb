@@ -100,9 +100,13 @@ module Jekyll
     def listen_ignore_paths(options)
       source = Pathname.new(options["source"]).expand_path
       paths  = to_exclude(options)
+      convert_to_regex(paths, options, source).compact + [%r!^\.jekyll\-metadata!]
+    end
 
-      paths.map do |p|
+    def convert_to_regex(paths, options, source)
+      paths.flat_map do |p|
         absolute_path = Pathname.new(normalize_encoding(p, options["source"].encoding)).expand_path
+        next convert_to_regex(Dir.glob(p), options, source) if p.include?("*")
         next unless absolute_path.exist?
 
         begin
@@ -116,7 +120,7 @@ module Jekyll
         rescue ArgumentError
           # Could not find a relative path
         end
-      end.compact + [%r!^\.jekyll\-metadata!]
+      end
     end
 
     def sleep_forever
