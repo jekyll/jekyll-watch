@@ -103,11 +103,12 @@ module Jekyll
 
       paths.map do |p|
         absolute_path = Pathname.new(normalize_encoding(p, options["source"].encoding)).expand_path
-        next unless absolute_path.exist?
 
         begin
           relative_path = absolute_path.relative_path_from(source).to_s
-          relative_path = File.join(relative_path, "") if absolute_path.directory?
+          if (absolute_path.exist? && absolute_path.directory?) || p.end_with?("/")
+            relative_path = File.join(relative_path, "")
+          end
           unless relative_path.start_with?("../")
             path_to_ignore = %r!^#{Regexp.escape(relative_path)}!
             Jekyll.logger.debug "Watcher:", "Ignoring #{path_to_ignore}"
