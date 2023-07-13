@@ -10,7 +10,8 @@ describe(Jekyll::Watcher) do
 
   let(:options) { base_opts }
   let(:site)    { instance_double(Jekyll::Site) }
-  let(:default_ignored) { [%r!^_config\.yml!, %r!^_site/!, %r!^\.jekyll\-metadata!] }
+  let(:config_files)    { [%r!^_config\.yml!, %r!^_config\.yaml!, %r!^_config\.toml!] }
+  let(:default_ignored) { config_files + [%r!^_site/!, %r!^\.jekyll\-metadata!] }
   subject { described_class }
   before(:each) do
     FileUtils.mkdir(options["destination"]) if options["destination"]
@@ -127,7 +128,7 @@ describe(Jekyll::Watcher) do
     end
 
     context "with a custom destination" do
-      let(:default_ignored) { [%r!^_config\.yml!, %r!^_dest/!, %r!^\.jekyll\-metadata!] }
+      let(:default_ignored) { config_files + [%r!^_dest/!, %r!^\.jekyll\-metadata!] }
 
       context "when source is absolute" do
         context "when destination is absolute" do
